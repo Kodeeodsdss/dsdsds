@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Промокоды</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+            padding-bottom: 60px; /* Добавлено для нижнего меню */
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .promo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .promo-code {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: none; /* Сначала промокод скрыт */
+        }
+
+        .promo-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+            .nav-button img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .nav-button span {
+                font-size: 12px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Промокоды</h1>
+
+        <div class="promo-container">
+            <div class="promo-code"></div>
+            <button class="promo-button" id="getPromoButton">Получить промокод</button>
+        </div>
+    </div>
+
+    <div class="nav-menu">
+        <div class="nav-button" id="backButton">
+            <img src="back-icon.png" alt="Назад">
+            <span>Назад</span>
+        </div>
+    </div>
+
+    <script>
+        // Получение ссылки на элемент списка промокодов
+        const promoList = document.getElementById('promoList');
+        const backButton = document.getElementById('backButton');
+        const getPromoButton = document.getElementById('getPromoButton');
+        const promoCode = document.querySelector('.promo-code');
+
+        // Список промокодов (для примера)
+        const promoCodes = [
+            { code: 'PROMO10', discount: '10%' },
+            { code: 'PROMO20', discount: '20%' },
+            { code: 'PROMO30', discount: '30%' },
+        ];
+
+        // Заполнение списка промокодов элементами
+        promoCodes.forEach(promoCode => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-item');
+            listItem.innerHTML = `${promoCode.code} - ${promoCode.discount}`;
+
+            // Обработка нажатия на элемент списка
+            listItem.addEventListener('click', () => {
+                // Скопировать промокод в буфер обмена
+                navigator.clipboard.writeText(promoCode.code);
+
+                // Вывести уведомление
+                alert('Промокод скопирован в буфер обмена!');
+            });
+
+            // Добавить элемент списка в контейнер
+            promoList.appendChild(listItem);
+        });
+
+        // Обработка нажатия кнопки "Назад"
+        backButton.addEventListener('click', () => {
+            // Вернуться на главную страницу
+            window.location.href = 'index.html';
+        });
+
+        // Логика выдачи промокода
+        getPromoButton.addEventListener('click', () => {
+            // Получение данных пользователя
+            Telegram.WebApp.getCurrentUserInfo().then(userInfo => {
+                const userId = userInfo.id;
+
+                // Проверка, когда последний раз был выдан промокод
+                const lastPromoDate = localStorage.getItem(`lastPromoDate-${userId}`);
+                const currentDate = new Date();
+
+                // Проверка, прошло ли 3 дня
+                if (!lastPromoDate || currentDate - new Date(lastPromoDate) >= 3 × 24 × 60 × 60 × 1000) {
+                // Генерация случайного промокода
+                const promoCodeText = generateRandomPromoCode();
+
+                // Отображение промокода
+                promoCode.textContent = promoCodeText;
+                promoCode.style.display = 'block';
+
+                // Сохранение даты выдачи промокода
+                localStorage.setItem(`lastPromoDate-${userId}`, currentDate.toISOString());
+
+                // Добавление кнопки "Скопировать"
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('promo-button');
+                copyButton.textContent = 'Скопировать';
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(promoCodeText)
+                        .then(() => {
+                            alert('Промокод скопирован!');
+                        })
+                        .catch(err => {
+                            console.error('Ошибка копирования:', err);
+                        });
+                });
+                promoContainer.appendChild(copyButton);
+            } else {
+                alert('Вы уже получали промокод недавно. Попробуйте снова через 3 дня.');
+            }
+        });
+        });
+
+        // Функция генерации случайного промокода
+        function generateRandomPromoCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let promoCode = '';
+            for (let i = 0; i < 10; i++) {
+                promoCode += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return promoCode;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Web App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+            padding-bottom: 60px; /* Добавлено для нижнего меню */
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .channel-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            margin: 30px 0;
+        }
+
+        .promo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .promo-code {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: none; /* Сначала промокод скрыт */
+        }
+
+        .promo-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+            .nav-button img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .nav-button span {
+                font-size: 12px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать!</h1>
+
+        <div class="profile-container">
+            <div class="profile-picture"></div>
+            <div class="user-info">
+                <span class="user-name"></span>
+                <span class="user-id"></span>
+            </div>
+        </div>
+        <div class="channel-container">
+            <!-- Сюда будет добавлен iframe для канала Telegram -->
+        </div>
+
+        <div class="promo-container">
+            <div class="promo-code"></div>
+            <button class="promo-button" id="getPromoButton">Получить промокод</button>
+        </div>
+    </div>
+
+    <div class="nav-menu">
+        <div class="nav-button" id="casinoButton">
+            <img src="casino-icon.png" alt="Казино">
+            <span>КАЗИНО</span>
+        </div>
+        <div class="nav-button" id="promoButton">
+            <img src="promo-icon.png" alt="Промокод">
+            <span>ПРОМОКОДЫ</span>
+        </div>
+    </div>
+
+    <script>
+        // Получение ссылок на элементы
+        const casinoButton = document.getElementById('casinoButton');
+        const promoButton = document.getElementById('promoButton');
+        const profilePicture = document.querySelector('.profile-picture');
+        const userName = document.querySelector('.user-name');
+        const userId = document.querySelector('.user-id');
+        const channelContainer = document.querySelector('.channel-container');
+        const getPromoButton = document.getElementById('getPromoButton');
+        const promoCode = document.querySelector('.promo-code');
+
+        // Обработка нажатия кнопки "КАЗИНО"
+        casinoButton.addEventListener('click', () => {
+            // Открыть список казино в новой вкладке в том же приложении
+            window.open('casino-list.html', '_self');
+        });
+
+        // Обработка нажатия кнопки "ПРОМОКОДЫ"
+        promoButton.addEventListener('click', () => {
+            // Открыть страницу промокодов в новой вкладке в том же приложении
+            window.open('promo-codes.html', '_self');
+        });
+
+        // Получение идентификатора канала Telegram
+        const channelId = 'GamblingSNG'; // Замените на идентификатор вашего канала
+
+        // Создание и добавление iframe канала в контейнер
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://t.me/${channelId}/embed`;
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.frameBorder = 0;
+        channelContainer.appendChild(iframe);
+
+        // Авторизация через Telegram
+        Telegram.WebApp.ready().then(() => {
+            // Получение данных пользователя
+            Telegram.WebApp.getCurrentUserInfo().then((userInfo) => {
+                // Установка имени пользователя
+                userName.textContent = userInfo.username;
+
+                // Установка идентификатора пользователя
+                userId.textContent = userInfo.id;
+
+                // Установка изображения профиля
+                if (userInfo.photo_url) {
+                    profilePicture.style.backgroundImage = `url(${userInfo.photo_url})`;
+                }
+            });
+        });
+
+        // Логика выдачи промокода
+        getPromoButton.addEventListener('click', () => {
+            // Получение данных пользователя
+            Telegram.WebApp.getCurrentUserInfo().then(userInfo => {
+                const userId = userInfo.id;
+
+                // Проверка, когда последний раз был выдан промокод
+                const lastPromoDate = localStorage.getItem(`lastPromoDate-${userId}`);
+                const currentDate = new Date();
+
+                // Проверка, прошло ли 3 дня
+                if (!lastPromoDate || currentDate - new Date(lastPromoDate) >= 3 × 24 × 60 × 60 × 1000) {
+                // Генерация случайного промокода
+                const promoCodeText = generateRandomPromoCode();
+
+                // Отображение промокода
+                promoCode.textContent = promoCodeText;
+                promoCode.style.display = 'block';
+
+                // Сохранение даты выдачи промокода
+                localStorage.setItem(`lastPromoDate-${userId}`, currentDate.toISOString());
+
+                // Добавление кнопки "Скопировать"
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('promo-button');
+                copyButton.textContent = 'Скопировать';
+                copyButton.addEventListener('click', () => {
+                    navigator.clipboard.writeText(promoCodeText)
+                        .then(() => {
+                            alert('Промокод скопирован!');
+                        })
+                        .catch(err => {
+                            console.error('Ошибка копирования:', err);
+                        });
+                });
+                promoContainer.appendChild(copyButton);
+            } else {
+                alert('Вы уже получали промокод недавно. Попробуйте снова через 3 дня.');
+            }
+        });
+        });
+
+        // Функция генерации случайного промокода
+        function generateRandomPromoCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let promoCode = '';
+            for (let i = 0; i < 10; i++) {
+                promoCode += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return promoCode;
+        }
+    </script>
+</body>
+</html>
