@@ -103,24 +103,24 @@
         <div id="loading-spinner"></div>
     </div>
 
-    <div id="app" style="display: none;">
-        <div id="content">
-            <iframe id="telegram-channel" src="https://t.me/GamblingSNGl" frameborder="0"></iframe>
-        </div>
-        <div id="buttons">
-            <button class="icon-button" id="casinoButton">
-                <i class="icon">🎰</i>
-                Казино
-            </button>
-            <button class="icon-button" id="promocodesButton">
-                <i class="icon">🎁</i>
-                Промокоды
-            </button>
-            <button class="icon-button" id="contactsButton">
-                <i class="icon">📞</i>
-                Контакты
-            </button>
-        </div>
+
+    <div id="content">
+        <iframe id="telegram-channel" src="https://vk.com/nnltd" frameborder="0"></iframe>
+    </div>
+    <div id="buttons">
+        <button class="icon-button" id="casinoButton">
+            <i class="icon">🎰</i>
+            Казино
+        </button>
+        <button class="icon-button" id="promocodesButton">
+            <i class="icon">🎁</i>
+            Промокоды
+        </button>
+        <button class="icon-button" id="contactsButton">
+            <i class="icon">📞</i>
+            Контакты
+        </button>
+    </div>
     </div>
 
     <script>
@@ -157,8 +157,8 @@
         Telegram.WebApp.setMenu(menu);
                 ));
 
-        // Скрываем экран загрузки и показываем приложение
-      
+        // Удаляем элемент загрузки
+        document.getElementById('loading-container').remove;
 
         // Обработка нажатия на кнопку "КАЗИНО"
         document.getElementById('casinoButton').addEventListener('click',  =>(
