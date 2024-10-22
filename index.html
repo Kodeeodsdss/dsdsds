@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <title>Telegram Web App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример Web App</title>
     <style>
+        dialog {
+            width: 300px;
+            padding: 200px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .close {
+            margin-top: 20px;
+            padding: 5px 15px;
+            background-color: #ccc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .close:hover {
+                background-color: #999;
+            }t-decoration: underline;
+        }
+
+        <style >
         body {
             margin: 0;
             padding: 0;
@@ -16,17 +37,6 @@
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
-        }
-
-       
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
         }
 
         #app {
@@ -65,6 +75,7 @@
             color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 1000px;
         }
 
             .icon-button:hover {
@@ -74,114 +85,55 @@
         .icon {
             font-size: 24px;
         }
+        #casinoDialog ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
         #telegram-channel {
             width: 100%;
             height: 300px;
             border: 1px solid #ccc;
         }
+    
     </style>
 </head>
-
 <body>
-    <div id="loading-container">
-        <div id="loading-spinner"></div>
-    </div>
 
+    <button class="icon-button" id="casinoButton">
+        <i class="icon">🎰</i>
+        Казино
+    </button>
+    <button class="icon-button" id="promocodesButton">
+        <i class="icon">🎁</i>
+        Промокоды
+    </button>
+    <div id="content"></div>
 
-    <div id="content">
-        <iframe id="telegram-channel" src="https://vk.com/nnltd" frameborder="0"></iframe>
-    </div>
-    <div id="buttons">
-        <button class="icon-button" id="casinoButton">
-            <i class="icon">🎰</i>
-            Казино
-        </button>
-        <button class="icon-button" id="promocodesButton">
-            <i class="icon">🎁</i>
-            Промокоды
-        </button>
-        <button class="icon-button" id="contactsButton">
-            <i class="icon">📞</i>
-            Контакты
-        </button>
-    </div>
-    </div>
+    <!-- Диалоговое окно -->
+    <dialog id="casinoDialog">
+        <h1>Казино</h1>
+        <p>Список казино:</p>
+        <ul>
+            <li>Роял</li>
+            <li>Ставки</li>
+            <li>Огурец</li>
+        </ul>
+        <button class="close">Закрыть</button>
+    </dialog>
 
     <script>
-        const Telegram = window.Telegram;
-        const bot = new Telegram.WebApp(env => (
-                // Кнопка меню
-                const menuButton = Telegram.WebAppMenuButton.create(
-            text: 'Меню',
-            color: '#0088cc'
-        );
-
-        Telegram.WebApp.setMenuButton(menuButton);
-
-        // Обработка нажатия на кнопку меню
-        menuButton.onClick(async => (
-                    // Создаем меню
-                    const menu = Telegram.WebAppMenu.create(
-            items: [
-            (
-                text: 'Казино',
-                url: '/casino' // Ссылка на страницу с казино
-            ),
-            (
-                text: 'Рейтинг',
-                url: '/rating' // Ссылка на страницу с рейтингом
-            ),
-            (
-                text: 'Промокоды',
-                url: '/promocodes' // Ссылка на страницу с промокодами
-            )
-                        ]
-        );
-
-        Telegram.WebApp.setMenu(menu);
-                ));
-
-        // Удаляем элемент загрузки
-        document.getElementById('loading-container').remove;
-
         // Обработка нажатия на кнопку "КАЗИНО"
-        document.getElementById('casinoButton').addEventListener('click',  =>(
-            Telegram.WebApp.showAlert(
-                title: 'Казино',
-                text: 'Список казино:- Роял- Ставки- Огурец',
-                buttons: [(
-                    text: 'Закрыть',
-                    action: 'close'
-                )]
-            );
-                ));
+        document.getElementById('casinoButton').addEventListener('click', () => {
+            // Открываем диалоговое окно
+            document.getElementById('casinoDialog').showModal();
+        });
 
-        // Обработка нажатия на кнопку "ПРОМОКОДЫ"
-        document.getElementById('promocodesButton').addEventListener('click',  =>(
-            Telegram.WebApp.showAlert(
-                title: 'Промокоды',
-                text: 'Список промокодов:- PROMO1- PROMO2- PROMO3',
-                buttons: [(
-                    text: 'Закрыть',
-                    action: 'close'
-                )]
-            );
-                ));
-
-        // Обработка нажатия на кнопку "КОНТАКТЫ"
-        document.getElementById('contactsButton').addEventListener('click',  =>(
-            Telegram.WebApp.showAlert(
-                title: 'Контакты',
-                text: 'Телефон: +7 (XXX) XXX-XX-XX: info@example.com: @your_telegram_channel',
-                buttons: [(
-                    text: 'Закрыть',
-                    action: 'close'
-                )]
-            );
-                ));
-            ));
+        // Закрытие диалогового окна
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('casinoDialog').close();
+        });
     </script>
-</body>
 
+</body>
 </html>
