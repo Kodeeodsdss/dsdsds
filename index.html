@@ -129,64 +129,50 @@
     <div id="content" style="display:none;"></div>
 
     <script>
-        // Функция показа/скрытия загрузчика
         function showLoader(show) {
             document.getElementById('loader').style.display = show ? 'flex' : 'none';
         }
 
-        // Отображение предупреждения о плохом соединении
         function showConnectionWarning(show) {
             document.getElementById('connection-warning').style.display = show ? 'block' : 'none';
         }
 
-        // Проверка состояния соединения
         function checkConnection() {
-            if (!navigator.onLine) {
-                showConnectionWarning(true);
-            } else {
-                showConnectionWarning(false);
-            }
+            showConnectionWarning(!navigator.onLine);
         }
-                // Слушаем события для проверки соединения
+
         window.addEventListener('online', checkConnection);
         window.addEventListener('offline', checkConnection);
 
-        // Показываем загрузчик при загрузке страницы
         showLoader(true);
-
+        
         window.onload = () => {
-            showLoader(false); // Убираем загрузчик после загрузки страницы
+            showLoader(false);
         };
-
-        // Открытие диалогового окна выбора категорий
-        document.getElementById('casinoButton').addEventListener('click', () => {
+                document.getElementById('casinoButton').addEventListener('click', () => {
             document.getElementById('categoryDialog').showModal();
         });
 
-        // Закрытие диалогового окна
         document.querySelector('.close').addEventListener('click', () => {
             document.getElementById('categoryDialog').close();
         });
 
-        // Функция для загрузки контента
         function loadContent(title, list) {
             const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = \`
+            contentDiv.innerHTML = `
                 <h1>${title}</h1>
-                <ul>${list.map(item => \`<li>${item}</li>\`).join('')}</ul>
-                <button id="backButton">Назад к выбору</button>\`;
+                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
+                <button id="backButton">Назад к выбору</button>`;
             contentDiv.style.display = 'block';
-            document.getElementById('main').style.display = 'none'; // Скрываем главное содержимое
-            document.getElementById('categoryDialog').close(); // Закрываем диалог
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('categoryDialog').close();
 
-            // Добавляем обработчик события для кнопки Назад
             document.getElementById('backButton').addEventListener('click', () => {
-                contentDiv.style.display = 'none'; // Скрываем содержимое
-                document.getElementById('main').style.display = 'flex'; // Показываем главное меню
+                contentDiv.style.display = 'none'; 
+                document.getElementById('main').style.display = 'flex'; 
             });
         }
 
-        // Обработчики для кнопок категорий
         document.getElementById('casinoOption').addEventListener('click', () => {
             loadContent('Казино', ['Роял', 'Ставки', 'Огурец']);
         });
@@ -199,7 +185,6 @@
             loadContent('Другое', ['Категория 1', 'Категория 2']);
         });
 
-        // Инициализируем проверку соединения
         checkConnection();
     </script>
 
