@@ -5,110 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пример Web App</title>
     <style>
-        dialog {
-            width: 300px;
-            padding: 200px;
-            border: none;
-            border-radius: 8px;
-        }
-
-        .close {
-            margin-top: 20px;
-            padding: 5px 15px;
-            background-color: #ccc;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-            .close:hover {
-                background-color: #999;
-            }t-decoration: underline;
-        }
-
-        <style >
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-
-        #app {
             display: flex;
             flex-direction: column;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        #content {
-            flex-grow: 1;
-            display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh; /* Занять всю высоту экрана */
+            text-align: center;
+            background-color: #f0f0f0; /* Светлый фон для контраста */
         }
 
-        #buttons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px;
-        }
-
-        .icon-button {
+        #main {
+            flex-grow: 1; /* Позволяет содержимому занимать основное пространство */
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 10px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
-            background-color: #0088cc;
+            background-color: #007BFF; /* Основной цвет */
             color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            width: 1000px;
         }
 
-            .icon-button:hover {
-                background-color: #0077bb;
+        button:hover {
+            background-color: #0056b3; /* Тёмно-синий при наведении */
+        }
+
+        dialog {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: white;
+        }
+
+        .close {
+            cursor: pointer;
+            color: #007BFF; /* Основной цвет */
+            text-decoration: underline;
+            padding: 10px;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            button {
+                width: 100%;
+                font-size: 20px;
+                padding: 15px 0;
             }
-
-        .icon {
-            font-size: 24px;
         }
-        #casinoDialog ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #telegram-channel {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #ccc;
-        }
-    
     </style>
 </head>
 <body>
 
-    <button class="icon-button" id="casinoButton">
-        <i class="icon">🎰</i>
-        Казино
-    </button>
-    <button class="icon-button" id="promocodesButton">
-        <i class="icon">🎁</i>
-        Промокоды
-    </button>
-    <div id="content"></div>
+    <div id="main">
+        <h1>Добро пожаловать в Казино</h1>
+        <p>Нажмите кнопку ниже, чтобы увидеть список казино:</p>
+    </div>
+
+    <button id="casinoButton">КАЗИНО</button>
 
     <!-- Диалоговое окно -->
     <dialog id="casinoDialog">
