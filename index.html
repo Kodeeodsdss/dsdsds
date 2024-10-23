@@ -1,130 +1,206 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пример Web App</title>
+    <title>Современное Казино</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;  
+            justify-content: center;
+            min-height: 100vh;
+            background-image: url('https://www.fesclub.ru/wp-content/uploads/2024/01/1614840939_129-p-fon-kazino-167-1.png'); /* Замените на ваш URL фона */
+            background-size: cover;
+            background-position: center;
+            color: #f0f0f0;
             text-align: center;
-            background-color: #f0f0f0; 
         }
 
         #loader {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-        }
-
-        @keyframes spinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .spinner {
-            border: 8px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #007BFF;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spinner 1s linear infinite;
-        }
-
-        #main {
-            flex-grow: 1; 
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            color: #fff;
         }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF; 
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #ff4081; /* Яркий цвет для спиннера */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
         }
 
-        button:hover {
-            background-color: #0056b3; 
-        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-        .option-button {
-            margin: 10px 0; 
-            background-color: #6C757D; 
-        }
-
-        dialog {
-            width: 90%;
-            max-width: 400px;
-            padding: 20px;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            background-color: white;
-        }
-
-        .close {
-            cursor: pointer;
-            color: #007BFF; 
-            text-decoration: underline;
-            padding: 10px;
-            border: none;
-            background-color: transparent;
-            font-size: 16px;
-        }
-
-        @media (max-width: 600px) {
-            button {
-                width: 100%;
-                font-size: 20px;
-                padding: 15px 0;
+            100% {
+                transform: rotate(360deg);
             }
         }
 
+        #main, #connection-warning {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: opacity 0.3s;
+            z-index: 1; /* На фоне */
+        }
+
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 2rem;
+        }
+
+        button {
+            padding: 15px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            background-color: #ff4081; /* Яркий цвет на кнопках */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
+
+            button:hover {
+                background-color: #e91e63;
+                transform: translateY(-2px);
+            }
+
+            button:active {
+                transform: translateY(0);
+            }
+
+        .option-button {
+            width: 90%;
+            max-width: 300px;
+            background-color: transparent;
+            border: 2px solid #ff4081;
+            color: #ff4081;
+            border-radius: 20px;
+            padding: 10px;
+            margin: 10px 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .option-button:hover {
+                background-color: #ff4081;
+                color: white;
+            }
+
         #connection-warning {
             display: none;
-            color: red;
-            font-size: 18px;
+            color: #ff4081;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #categoriesDialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            padding: 10%;
+        }
+
+        .dialog-content {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+        }
+
+        .close-dialog {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #ff4081;
+        }
+
+        #telegram-widget {
+            margin: 20px 0;
+            display: none;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        /* Адаптивный дизайн */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            button, .option-button {
+                font-size: 14px;
+            }
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
-<body>
 
+<body>
     <div id="loader">
         <div class="spinner"></div>
         <p>Загрузка...</p>
     </div>
 
-    <div id="connection-warning">Плохое соединение с интернетом!</div>
+    <div id="connection-warning">
+        <p>Плохое соединение с интернетом!</p>
+        <button id="refreshButton">Обновить</button>
+    </div>
 
     <div id="main">
         <h1>Добро пожаловать в Казино</h1>
-        <p>Нажмите кнопку ниже, чтобы увидеть категории:</p>
+        <p>Нажмите на кнопку ниже, чтобы начать!</p>
+        <button id="casinoButton">🎰 Начать Играть</button>
     </div>
 
-    <button id="casinoButton">КАЗИНО</button>
-
-    <dialog id="categoryDialog">
-        <h1>Выберите категорию</h1>
-        <button class="option-button" id="casinoOption">Казино</button>
-        <button class="option-button" id="nopDepositOption">Бездепы</button>
-        <button class="option-button" id="otherOption">Другое</button>
-        <button class="close">Закрыть</button>
-    </dialog>
+    <div id="categoriesDialog">
+        <div class="dialog-content">
+            <span class="close-dialog">&times;</span>
+            <h2>Выберите категорию</h2>
+            <button class="option-button" id="casinoOption">Казино</button>
+            <button class="option-button" id="noDepositOption">Бездепы</button>
+            <button class="option-button" id="otherOption">Другое</button>
+            <button class="option-button" id="backButton">Назад к меню</button>
+        </div>
+    </div>
 
     <div id="content" style="display:none;"></div>
 
@@ -134,7 +210,7 @@
         }
 
         function showConnectionWarning(show) {
-            document.getElementById('connection-warning').style.display = show ? 'block' : 'none';
+            document.getElementById('connection-warning').style.display = show ? 'flex' : 'none';
         }
 
         function checkConnection() {
@@ -145,31 +221,43 @@
         window.addEventListener('offline', checkConnection);
 
         showLoader(true);
-        
+
+        setTimeout(() => {
+            showLoader(false);
+        }, 5000); // 5000 миллисекунд = 5 секунд
+
         window.onload = () => {
             showLoader(false);
         };
-                document.getElementById('casinoButton').addEventListener('click', () => {
-            document.getElementById('categoryDialog').showModal();
+
+        document.getElementById('casinoButton').addEventListener('click', () => {
+            document.getElementById('categoriesDialog').style.display = 'flex';
+            document.getElementById('main').style.display = 'none';
         });
 
-        document.querySelector('.close').addEventListener('click', () => {
-            document.getElementById('categoryDialog').close();
+        document.querySelector('.close-dialog').addEventListener('click', () => {
+            document.getElementById('categoriesDialog').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
+        });
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            document.getElementById('categoriesDialog').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
         });
 
         function loadContent(title, list) {
             const contentDiv = document.getElementById('content');
             contentDiv.innerHTML = `
-                <h1>${title}</h1>
-                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
-                <button id="backButton">Назад к выбору</button>`;
-            contentDiv.style.display = 'block';
+                                <h1>${title}</h1>
+                                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
+                                <button id="backToCategories">Назад к выбору</button>`;
+            contentDiv.style.display = 'flex';
             document.getElementById('main').style.display = 'none';
-            document.getElementById('categoryDialog').close();
+            document.getElementById('categoriesDialog').style.display = 'none';
 
-            document.getElementById('backButton').addEventListener('click', () => {
-                contentDiv.style.display = 'none'; 
-                document.getElementById('main').style.display = 'flex'; 
+            document.getElementById('backToCategories').addEventListener('click', () => {
+                contentDiv.style.display = 'none';
+                document.getElementById('categoriesDialog').style.display = 'flex';
             });
         }
 
@@ -177,17 +265,19 @@
             loadContent('Казино', ['Роял', 'Ставки', 'Огурец']);
         });
 
-        document.getElementById('nopDepositOption').addEventListener('click', () => {
+        document.getElementById('noDepositOption').addEventListener('click', () => {
             loadContent('Бездепы', ['Бездепозитный бонус 1', 'Бездепозитный бонус 2']);
         });
-
         document.getElementById('otherOption').addEventListener('click', () => {
             loadContent('Другое', ['Категория 1', 'Категория 2']);
         });
 
+        document.getElementById('refreshButton').addEventListener('click', () => {
+            location.reload();
+        });
+
         checkConnection();
     </script>
-
 </body>
+
 </html>
-        
