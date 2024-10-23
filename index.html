@@ -11,15 +11,14 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh; /* Занять всю высоту экрана */
+            height: 100vh;  
             text-align: center;
-            background-color: #f0f0f0; /* Светлый фон для контраста */
+            background-color: #f0f0f0; 
         }
 
         #main {
-            flex-grow: 1; /* Позволяет содержимому занимать основное пространство */
+            flex-grow: 1; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -30,14 +29,19 @@
             font-size: 18px;
             border: none;
             border-radius: 5px;
-            background-color: #007BFF; /* Основной цвет */
+            background-color: #007BFF; 
             color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3; /* Тёмно-синий при наведении */
+            background-color: #0056b3; 
+        }
+
+        .option-button {
+            margin: 10px 0; 
+            background-color: #6C757D; 
         }
 
         dialog {
@@ -52,7 +56,7 @@
 
         .close {
             cursor: pointer;
-            color: #007BFF; /* Основной цвет */
+            color: #007BFF; 
             text-decoration: underline;
             padding: 10px;
             border: none;
@@ -73,33 +77,60 @@
 
     <div id="main">
         <h1>Добро пожаловать в Казино</h1>
-        <p>Нажмите кнопку ниже, чтобы увидеть список казино:</p>
+        <p>Нажмите кнопку ниже, чтобы увидеть категории:</p>
     </div>
 
     <button id="casinoButton">КАЗИНО</button>
 
-    <!-- Диалоговое окно -->
-    <dialog id="casinoDialog">
-        <h1>Казино</h1>
-        <p>Список казино:</p>
-        <ul>
-            <li>Роял</li>
-            <li>Ставки</li>
-            <li>Огурец</li>
-        </ul>
+    <dialog id="categoryDialog">
+        <h1>Выберите категорию</h1>
+        <button class="option-button" id="casinoOption">Казино</button>
+        <button class="option-button" id="nopDepositOption">Бездепы</button>
+        <button class="option-button" id="otherOption">Другое</button>
         <button class="close">Закрыть</button>
     </dialog>
 
+    <div id="content" style="display:none;"></div>
+
     <script>
-        // Обработка нажатия на кнопку "КАЗИНО"
+        // Открытие диалогового окна выбора категорий
         document.getElementById('casinoButton').addEventListener('click', () => {
-            // Открываем диалоговое окно
-            document.getElementById('casinoDialog').showModal();
+            document.getElementById('categoryDialog').showModal();
         });
 
         // Закрытие диалогового окна
         document.querySelector('.close').addEventListener('click', () => {
-            document.getElementById('casinoDialog').close();
+            document.getElementById('categoryDialog').close();
+        });
+
+        // Функция для загрузки контента
+        function loadContent(title, list) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `
+                <h1>${title}</h1>
+                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
+                <button id="backButton">Назад к выбору</button>`;
+            contentDiv.style.display = 'block';
+            document.getElementById('main').style.display = 'none'; // Скрываем главное содержимое
+            document.getElementById('categoryDialog').close(); // Закрываем диалог
+
+            // Добавляем обработчик события для кнопки Назад
+            document.getElementById('backButton').addEventListener('click', () => {
+                contentDiv.style.display = 'none'; // Скрываем содержимое
+                document.getElementById('main').style.display = 'flex'; // Показываем главное меню
+            });
+        }
+
+        // Обработчики для кнопок категорий
+        document.getElementById('casinoOption').addEventListener('click', () => {
+            loadContent('Казино', ['Роял', 'Ставки', 'Огурец']);
+        }); 
+                document.getElementById('nopDepositOption').addEventListener('click', () => {
+            loadContent('Бездепы', ['Бездепозитный бонус 1', 'Бездепозитный бонус 2']);
+        });
+
+        document.getElementById('otherOption').addEventListener('click', () => {
+            loadContent('Другое', ['Категория 1', 'Категория 2']);
         });
     </script>
 
