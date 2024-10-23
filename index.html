@@ -17,6 +17,29 @@
             background-color: #f0f0f0; 
         }
 
+        #loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            border: 8px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #007BFF;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spinner 1s linear infinite;
+        }
+
         #main {
             flex-grow: 1; 
             display: flex;
@@ -71,9 +94,22 @@
                 padding: 15px 0;
             }
         }
+
+        #connection-warning {
+            display: none;
+            color: red;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Загрузка...</p>
+    </div>
+
+    <div id="connection-warning">Плохое соединение с интернетом!</div>
 
     <div id="main">
         <h1>Добро пожаловать в Казино</h1>
@@ -93,6 +129,35 @@
     <div id="content" style="display:none;"></div>
 
     <script>
+        // Функция показа/скрытия загрузчика
+        function showLoader(show) {
+            document.getElementById('loader').style.display = show ? 'flex' : 'none';
+        }
+
+        // Отображение предупреждения о плохом соединении
+        function showConnectionWarning(show) {
+            document.getElementById('connection-warning').style.display = show ? 'block' : 'none';
+        }
+
+        // Проверка состояния соединения
+        function checkConnection() {
+            if (!navigator.onLine) {
+                showConnectionWarning(true);
+            } else {
+                showConnectionWarning(false);
+            }
+        }
+                // Слушаем события для проверки соединения
+        window.addEventListener('online', checkConnection);
+        window.addEventListener('offline', checkConnection);
+
+        // Показываем загрузчик при загрузке страницы
+        showLoader(true);
+
+        window.onload = () => {
+            showLoader(false); // Убираем загрузчик после загрузки страницы
+        };
+
         // Открытие диалогового окна выбора категорий
         document.getElementById('casinoButton').addEventListener('click', () => {
             document.getElementById('categoryDialog').showModal();
@@ -106,10 +171,10 @@
         // Функция для загрузки контента
         function loadContent(title, list) {
             const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `
+            contentDiv.innerHTML = \`
                 <h1>${title}</h1>
-                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
-                <button id="backButton">Назад к выбору</button>`;
+                <ul>${list.map(item => \`<li>${item}</li>\`).join('')}</ul>
+                <button id="backButton">Назад к выбору</button>\`;
             contentDiv.style.display = 'block';
             document.getElementById('main').style.display = 'none'; // Скрываем главное содержимое
             document.getElementById('categoryDialog').close(); // Закрываем диалог
@@ -124,14 +189,18 @@
         // Обработчики для кнопок категорий
         document.getElementById('casinoOption').addEventListener('click', () => {
             loadContent('Казино', ['Роял', 'Ставки', 'Огурец']);
-        }); 
-                document.getElementById('nopDepositOption').addEventListener('click', () => {
+        });
+
+        document.getElementById('nopDepositOption').addEventListener('click', () => {
             loadContent('Бездепы', ['Бездепозитный бонус 1', 'Бездепозитный бонус 2']);
         });
 
         document.getElementById('otherOption').addEventListener('click', () => {
             loadContent('Другое', ['Категория 1', 'Категория 2']);
         });
+
+        // Инициализируем проверку соединения
+        checkConnection();
     </script>
 
 </body>
