@@ -1,47 +1,32 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Современное Казино</title>
+    <title>Казино</title>
     <style>
         body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #004d00, #00cc66);
+            color: #ffffff;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            background-image: url('https://www.fesclub.ru/wp-content/uploads/2024/01/1614840939_129-p-fon-kazino-167-1.png');
-            background-size: cover;
-            background-position: center;
-            color: #f0f0f0;
-            font-family: 'Arial', sans-serif;
         }
 
-        #loader {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            color: #fff;
+        #loader, #connection-warning, #projectsModal {
+            display: none;
         }
 
         .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #ff4081;
+            border: 8px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            border-top: 8px solid #ffcc00;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
         }
 
@@ -50,127 +35,95 @@
             100% { transform: rotate(360deg); }
         }
 
-        #main, #connection-warning {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            transition: opacity 0.3s;
-            z-index: 1;
-        }
-
-        h1 {
-            margin: 0 0 20px 0;
-            font-size: 2rem;
-            text-align: center;
-        }
-
-        button {
-            padding: 15px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 20px;
-            background-color: #ff4081;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin: 10px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            outline: none;
-            width: 100%; /* Занимает всю ширину контейнера */
-            max-width: 300px; /* Ограничиваем максимальную ширину кнопки */
-        }
-
-        button:hover {
-            background-color: #e91e63;
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .option-button {
-            width: 90%;
-            max-width: 300px;
-            background-color: transparent;
-            border: 2px solid #ff4081;
-            color: #ff4081;
-            border-radius: 20px;
+        button, .option-button {
             padding: 10px;
-            margin: 10px 0;
-            transition: background-color 0.3s, color 0.3s;
+            margin: 5px;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80%;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
-        .option-button:hover {
-            background-color: #ff4081;
-            color: white;
+        button:hover, .option-button:hover {
+            background-color: #ffd700;
+            transform: scale(1.05);
         }
 
-        #connection-warning {
-            display: none;
-            color: #ff4081;
-            font-size: 16px;
-            margin-top: 20px;
+        #content, #categoriesDialog {
+            width: 80%;
+            margin-bottom: 60px; 
         }
 
-        #categoriesDialog {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        .bottom-menu {
+            display: flex;
+            justify-content: space-around;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #34495E;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .icon-button img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .modal {
+            display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1001;
-            padding: 20px 0;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .dialog-content {
-            background-color: rgba(255, 255, 255, 0.9);
+        .modal-content {
+            background-color: #2C3E50;
+            margin: auto;
             padding: 20px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 350px;
-            position: relative;
+            border: 1px solid #888;
+            width: 80%;
+            color: #ECF0F1;
             text-align: center;
         }
 
-        .close-dialog {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            color: #ff4081;
-        }
-        #telegram-widget {
-            margin: 20px 0;
-            display: none;
-            width: 90%;
-            max-width: 350px;
+        .casino-image {
+            width: 100%;
+            max-width: 300px; 
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            button, .option-button {
-                font-size: 14px;
-            }
-            .spinner {
-                width: 40px;
-                height: 40px;
-            }
-            #main {
-                padding: 10px;
-            }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
         }
+
     </style>
 </head>
-
 <body>
     <div id="loader">
         <div class="spinner"></div>
@@ -182,97 +135,150 @@
         <button id="refreshButton">Обновить</button>
     </div>
 
-    <div id="main">
-        <h1>Добро пожаловать в Казино</h1>
-        <p>Нажмите на кнопку ниже, чтобы начать!</p>
-        <button id="casinoButton">🎰 Начать Играть</button>
+    <div id="categoriesDialog" style="display: none;">
+        <h2>Выберите категорию</h2>
+        <button class="option-button" id="casinoOption">Казино</button>
+        <button class="option-button" id="noDepositOption">Бездепы</button>
+        <button class="option-button" id="otherOption">Другое</button>
+        <button class="option-button" id="backButton">Назад к меню</button>
     </div>
-<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="GamblingSNG/3243" data-width="100%" data-color="13B4C6" data-dark="1" data-dark-color="39C4E8"></script>
-    <div id="categoriesDialog">
-        <div class="dialog-content">
-            <span class="close-dialog">&times;</span>
-            <h2>Выберите категорию</h2>
-            <button class="option-button" id="casinoOption">Казино</button>
-            <button class="option-button" id="noDepositOption">Бездепы</button>
-            <button class="option-button" id="otherOption">Другое</button>
-            <button class="option-button" id="backButton">Назад к меню</button>
+
+    <div id="content" style="display: none;"></div>
+
+    <div class="modal" id="casinoModal">
+        <div class="modal-content">
+            <span class="close" id="closeCasinoModal">&times;</span>
+            <img class="casino-image" id="modalCasinoImage" src="" alt="Казино">
+            <h2 id="modalCasinoTitle"></h2>
+            <p id="modalCasinoDescription"></p>
+            <a id="playBonusButton" class="option-button" href="#" target="_blank">Играть с бонусами</a>
         </div>
     </div>
 
-    <div id="content" style="display:none;"></div>
+    <div class="bottom-menu">
+        <button class="icon-button" id="projectsButton">
+            <img src="https://img.icons8.com/ios/50/ffffff/project.png" alt="Проекты">
+            <p>Проекты</p>
+        </button>
+        <button class="icon-button" id="menuButton">
+            <img src="https://img.icons8.com/ios/50/ffffff/menu-2.png" alt="Меню">
+            <p>Меню</p>
+        </button>
+        <button class="icon-button" id="bonusesButton">
+            <img src="https://img.icons8.com/ios/50/ffffff/gift.png" alt="Бонусы">
+            <p>Бонусы</p>
+        </button>
+    </div>
 
     <script>
-        function showLoader(show) {
-            document.getElementById('loader').style.display = show ? 'flex' : 'none';
-        }
-
-        function showConnectionWarning(show) {
-            document.getElementById('connection-warning').style.display = show ? 'flex' : 'none';
-        }
-
-        function checkConnection() {
-            showConnectionWarning(!navigator.onLine);
-        }
-
-        window.addEventListener('online', checkConnection);
-        window.addEventListener('offline', checkConnection);
-
-        showLoader(true);
-        setTimeout(() => {
-            showLoader(false);
-        }, 5000); // 5000 миллисекунд = 5 секунд
-        window.onload = () => {
-            showLoader(false);
-        };
-
-        document.getElementById('casinoButton').addEventListener('click', () => {
-            document.getElementById('categoriesDialog').style.display = 'flex';
-            document.getElementById('main').style.display = 'none';
-        });
-
-        document.querySelector('.close-dialog').addEventListener('click', () => {
-            document.getElementById('categoriesDialog').style.display = 'none';
-            document.getElementById('main').style.display = 'flex';
-        });
-
-        document.getElementById('backButton').addEventListener('click', () => {
-            document.getElementById('categoriesDialog').style.display = 'none';
-            document.getElementById('main').style.display = 'flex';
-        });
-
-        function loadContent(title, list) {
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoriesDialog = document.getElementById('categoriesDialog');
             const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `
-                <h1>${title}</h1>
-                <ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>
-                <button id="backToCategories">Назад к выбору</button>`;
-            contentDiv.style.display = 'flex';
-            document.getElementById('main').style.display = 'none';
-            document.getElementById('categoriesDialog').style.display = 'none';
+            const casinoModal = document.getElementById('casinoModal');
+            const modalCasinoImage = document.getElementById('modalCasinoImage');
+            const modalCasinoTitle = document.getElementById('modalCasinoTitle');
+            const modalCasinoDescription = document.getElementById('modalCasinoDescription');
+            const playBonusButton = document.getElementById('playBonusButton');
 
-            document.getElementById('backToCategories').addEventListener('click', () => {
-                contentDiv.style.display = 'none';
-                document.getElementById('categoriesDialog').style.display = 'flex';
+            // Данные о казино
+            const casinos = {
+                'Казино': [
+                    { name: 'Водка', description: 'Казино с азартными играми.', image: 'vodka.jpg', link: 'https://example.com/vodka-bonus' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+                'Бездепы': [
+                    { name: 'Даргон', description: 'Бездепозитный бонус от Даргон.', image: 'dargon.jpg', link: 'https://example.com/dargon-bonus' },
+                    { name: 'Битз', description: 'Бездепозитный бонус от Битз.', image: 'bitz.jpg', link: 'https://example.com/bitz-bonus' }
+                ],
+                'Другое': [
+                    { name: '1хбет', description: 'Крупный букмекер и казино.', image: '1xbet.jpg', link: 'https://example.com/1xbet-bonus' },
+                    { name: 'Гамма', description: 'Разнообразные азартные игры.', image: 'gamma.jpg', link: 'https://example.com/gamma-bonus' }
+                ]
+            };
+
+            // Открытие окна с категориями
+            document.getElementById('menuButton').addEventListener('click', () => {
+                categoriesDialog.style.display = 'block'; // Показать категории
             });
-        }
 
-        document.getElementById('casinoOption').addEventListener('click', () => {
-            loadContent('Казино', ['Роял', 'Ставки', 'Огурец']);
-        });
-        document.getElementById('noDepositOption').addEventListener('click', () => {
-            loadContent('Бездепы', ['Бездепозитный бонус 1', 'Бездепозитный бонус 2']);
-        });
+            // Обработка нажатий на категории
+            document.querySelectorAll('#categoriesDialog .option-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const category = event.target.textContent;
+                    if (casinos[category]) {
+                        loadContent(category, casinos[category]);
+                    } else {
+                        categoriesDialog.style.display = 'none'; // Скрыть категории, если нажатие не на категорию
+                    }
+                });
+            });
 
-        document.getElementById('otherOption').addEventListener('click', () => {
-            loadContent('Другое', ['Категория 1', 'Категория 2']);
-        });
+            // Функция загрузки контента по категориям
+            function loadContent(title, items) {
+                contentDiv.innerHTML = `<h1>${title}</h1>`;
+                items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.textContent = item.name;
+                    button.className = 'option-button';
+                    button.onclick = () => showCasinoInfo(item);
+                    contentDiv.appendChild(button);
+                });
 
-        document.getElementById('refreshButton').addEventListener('click', () => {
-            location.reload();
-        });
+                const categoriesButton = document.createElement('button');
+                categoriesButton.textContent = 'К выбору категорий';
+                categoriesButton.className = 'option-button';
+                categoriesButton.onclick = () => {
+                    categoriesDialog.style.display = 'block';
+                    contentDiv.style.display = 'none';
+                };
 
-        checkConnection();
+                const backToMenuButton = document.createElement('button');
+                backToMenuButton.textContent = 'Назад в меню';
+                backToMenuButton.className = 'option-button';
+                backToMenuButton.onclick = () => {
+                    contentDiv.style.display = 'none';
+                    categoriesDialog.style.display = 'none';
+                };
+
+                contentDiv.appendChild(categoriesButton);
+                contentDiv.appendChild(backToMenuButton);
+
+                contentDiv.style.display = 'block';
+                categoriesDialog.style.display = 'none'; // Скрываем категории
+            }
+
+            // Функция для отображения информации о выбранном казино
+            function showCasinoInfo(casino) {
+                modalCasinoImage.src = casino.image;
+                modalCasinoTitle.textContent = casino.name;
+                modalCasinoDescription.textContent = casino.description;
+                playBonusButton.href = casino.link; // Ссылка на игру с бонусами
+                casinoModal.style.display = 'flex'; // Показать модальное окно
+            }
+
+            // Закрытие модального окна
+            document.getElementById('closeCasinoModal').addEventListener('click', () => {
+                casinoModal.style.display = 'none'; // Скрыть модальное окно
+            });
+
+            // Закрытие модального окна при клике вне области
+            window.addEventListener('click', (event) => {
+                if (event.target == casinoModal) {
+                    casinoModal.style.display = 'none';
+                }
+            });
+
+    // Открытие модального окна при нажатии на кнопку "Проекты"
+document.getElementById('projectsButton').addEventListener('click', () => {
+    window.open('https://t.me/GamblingSNG/2799', '_blank'); // Открытие ссылки в новой вкладке
+});
+
+            // Скрытие категорий при нажатии на "Назад к меню"
+            document.getElementById('backButton').addEventListener('click', () => {
+                categoriesDialog.style.display = 'none'; // Скрыть категории
+            });
+        });
     </script>
+    
 </body>
-
 </html>
