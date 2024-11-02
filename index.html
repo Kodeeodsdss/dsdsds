@@ -1,285 +1,138 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Казино</title>
+    <title>Бонусы</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(120deg, #004d00, #00cc66);
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-             background-image: url('https://www.fesclub.ru/wp-content/uploads/2024/01/1614840939_129-p-fon-kazino-167-1.png'); /* Замените на ваш URL фона */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        #loader, #connection-warning, #projectsModal {
-            display: none;
-        }
-
-        .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            border-top: 8px solid #ffcc00;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        button, .option-button {
-            padding: 10px;
-            margin: 5px;
-            background-color: #ffcc00;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 80%;
-            font-size: 18px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        button:hover, .option-button:hover {
-            background-color: #ffd700;
-            transform: scale(1.05);
-        }
-
-        #content, #categoriesDialog {
-            width: 80%;
-            margin-bottom: 60px; 
-        }
-
         .bottom-menu {
             display: flex;
             justify-content: space-around;
-            width: 100%;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            background-color: #34495E;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
         }
 
         .icon-button {
             background: none;
             border: none;
             cursor: pointer;
-            text-align: center;
-            color: #ffffff;
         }
 
-        .icon-button img {
-            width: 40px;
-            height: 40px;
-        }
-
-        .modal {
+        #menuDialog,
+        #inputCodeDialog {
             display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .modal-content {
-            background-color: #2C3E50;
-            margin: auto;
+            border: 1px solid #ccc;
             padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            color: #ECF0F1;
-            text-align: center;
+            position: absolute;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-
-        .casino-image {
-            width: 100%;
-            max-width: 300px; 
-            border: 2px solid #ffcc00;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
     </style>
 </head>
+
 <body>
-    <div id="loader">
-        <div class="spinner"></div>
-        <p>Загрузка...</p>
-    </div>
-
-    <div id="connection-warning">
-        <p>Плохое соединение с интернетом!</p>
-        <button id="refreshButton">Обновить</button>
-    </div>
-
-    <div id="categoriesDialog" style="display: none;">
-        <h2>Выберите категорию</h2>
-        <button class="option-button" id="casinoOption">Казино</button>
-        <button class="option-button" id="noDepositOption">Бездепы</button>
-        <button class="option-button" id="otherOption">Другое</button>
-        <button class="option-button" id="backButton">Назад к меню</button>
-    </div>
-
-    <div id="content" style="display: none;"></div>
-
-    <div class="modal" id="casinoModal">
-        <div class="modal-content">
-            <span class="close" id="closeCasinoModal">&times;</span>
-            <img class="casino-image" id="modalCasinoImage" src="" alt="Казино">
-            <h2 id="modalCasinoTitle"></h2>
-            <p id="modalCasinoDescription"></p>
-            <a id="playBonusButton" class="option-button" href="#" target="_blank">Играть с бонусами</a>
-        </div>
-    </div>
 
     <div class="bottom-menu">
-        <button class="icon-button" id="projectsButton">
-            <img src="https://img.icons8.com/ios/50/ffffff/project.png" alt="Проекты">
-            <p>Проекты</p>
-        </button>
         <button class="icon-button" id="menuButton">
-            <img src="https://img.icons8.com/ios/50/ffffff/menu-2.png" alt="Меню">
-            <p>Меню</p>
-        </button>
-        <button class="icon-button" id="bonusesButton">
-            <img src="https://img.icons8.com/ios/50/ffffff/gift.png" alt="Бонусы">
             <p>Бонусы</p>
         </button>
+        <button class="icon-button" id="bonusesButton">
+            <p>Меню</p>
+        </button>
+    </div>
+
+    <!-- Диалог для ввода кода -->
+    <div id="inputCodeDialog">
+        <h3>Введите код доступа</h3>
+        <input type="text" id="accessCode" placeholder="Код доступа">
+        <button id="submitCodeButton">Подтвердить</button>
+        <p id="codeMessage"></p>
+        <button id="backToMenu" style="display:none;">Назад в меню</button>
+    </div>
+
+    <!-- Диалог для получения промокода -->
+    <div id="promoCodeDialog" style="display:none;">
+        <h3>Промокод получен!</h3>
+        <p id="promoCodeDisplay"></p>
+        <button id="copyPromoCodeButton">Скопировать промокод</button>
+        <button id="claimNewCodeButton" style="display:none;">Получить новый промокод</button>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const categoriesDialog = document.getElementById('categoriesDialog');
-            const contentDiv = document.getElementById('content');
-            const casinoModal = document.getElementById('casinoModal');
-            const modalCasinoImage = document.getElementById('modalCasinoImage');
-            const modalCasinoTitle = document.getElementById('modalCasinoTitle');
-            const modalCasinoDescription = document.getElementById('modalCasinoDescription');
-            const playBonusButton = document.getElementById('playBonusButton');
+        const codesdostup = ['ACCESS123', 'ACCESS456', 'ACCESS789']; // Доступные коды доступа
+        const promoCodes = ['BONUS2023', 'PROMO123', 'FREEPLAY456']; // Промокоды
+        let claimedPromoCodes = []; // Активированные промокоды
 
-            // Данные о казино
-            const casinos = {
-                'Казино': [
-                    { name: 'Водка', description: 'Казино с азартными играми.', image: 'vodka.jpg', link: 'https://example.com/vodka-bonus' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
-                ],
-                'Бездепы': [
-                    { name: 'Даргон', description: 'Бездепозитный бонус от Даргон.', image: 'dargon.jpg', link: 'https://example.com/dargon-bonus' },
-                    { name: 'Битз', description: 'Бездепозитный бонус от Битз.', image: 'bitz.jpg', link: 'https://example.com/bitz-bonus' }
-                ],
-                'Другое': [
-                    { name: '1хбет', description: 'Крупный букмекер и казино.', image: '1xbet.jpg', link: 'https://example.com/1xbet-bonus' },
-                    { name: 'Гамма', description: 'Разнообразные азартные игры.', image: 'gamma.jpg', link: 'https://example.com/gamma-bonus' }
-                ]
-            };
+        function showAccessCodeDialog() {
+            document.getElementById('inputCodeDialog').style.display = 'block';
+            document.getElementById('codeMessage').innerText = '';
+            document.getElementById('accessCode').value = '';
+            const lastClaimDateStr = localStorage.getItem('lastClaimDate');
 
-            // Открытие окна с категориями
-            document.getElementById('menuButton').addEventListener('click', () => {
-                categoriesDialog.style.display = 'block'; // Показать категории
-            });
-
-            // Обработка нажатий на категории
-            document.querySelectorAll('#categoriesDialog .option-button').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const category = event.target.textContent;
-                    if (casinos[category]) {
-                        loadContent(category, casinos[category]);
-                    } else {
-                        categoriesDialog.style.display = 'none'; // Скрыть категории, если нажатие не на категорию
-                    }
-                });
-            });
-
-            // Функция загрузки контента по категориям
-            function loadContent(title, items) {
-                contentDiv.innerHTML = `<h1>${title}</h1>`;
-                items.forEach(item => {
-                    const button = document.createElement('button');
-                    button.textContent = item.name;
-                    button.className = 'option-button';
-                    button.onclick = () => showCasinoInfo(item);
-                    contentDiv.appendChild(button);
-                });
-
-                const categoriesButton = document.createElement('button');
-                categoriesButton.textContent = 'К выбору категорий';
-                categoriesButton.className = 'option-button';
-                categoriesButton.onclick = () => {
-                    categoriesDialog.style.display = 'block';
-                    contentDiv.style.display = 'none';
-                };
-
-                const backToMenuButton = document.createElement('button');
-                backToMenuButton.textContent = 'Назад в меню';
-                backToMenuButton.className = 'option-button';
-                backToMenuButton.onclick = () => {
-                    contentDiv.style.display = 'none';
-                    categoriesDialog.style.display = 'none';
-                };
-
-                contentDiv.appendChild(categoriesButton);
-                contentDiv.appendChild(backToMenuButton);
-
-                contentDiv.style.display = 'block';
-                categoriesDialog.style.display = 'none'; // Скрываем категории
-            }
-
-            // Функция для отображения информации о выбранном казино
-            function showCasinoInfo(casino) {
-                modalCasinoImage.src = casino.image;
-                modalCasinoTitle.textContent = casino.name;
-                modalCasinoDescription.textContent = casino.description;
-                playBonusButton.href = casino.link; // Ссылка на игру с бонусами
-                casinoModal.style.display = 'flex'; // Показать модальное окно
-            }
-
-            // Закрытие модального окна
-            document.getElementById('closeCasinoModal').addEventListener('click', () => {
-                casinoModal.style.display = 'none'; // Скрыть модальное окно
-            });
-
-            // Закрытие модального окна при клике вне области
-            window.addEventListener('click', (event) => {
-                if (event.target == casinoModal) {
-                    casinoModal.style.display = 'none';
+            // Проверка, если прошло 7 дней с последнего ввода кода доступа
+            if (lastClaimDateStr) {
+                const lastClaimDate = new Date(lastClaimDateStr);
+                const now = new Date();
+                const daysSinceLastClaim = Math.floor((now - lastClaimDate) / (1000 * 60 * 60 * 24));
+                if (daysSinceLastClaim < 7) {
+                    document.getElementById('codeMessage').innerText = `Вы сможете ввести код доступа только через ${7 - daysSinceLastClaim} дней.`;
+                    document.getElementById('submitCodeButton').disabled = true;
+                } else {
+                    document.getElementById('submitCodeButton').disabled = false;
                 }
-            });
+            } else {
+                document.getElementById('submitCodeButton').disabled = false;
+            }
+        }
 
-    // Открытие модального окна при нажатии на кнопку "Проекты"
-document.getElementById('projectsButton').addEventListener('click', () => {
-    window.open('https://t.me/GamblingSNG/2799', '_blank'); // Открытие ссылки в новой вкладке
-});
+        function claimPromoCode() {
+            const availablePromoCodes = promoCodes.filter(code => !claimedPromoCodes.includes(code));
 
-            // Скрытие категорий при нажатии на "Назад к меню"
-            document.getElementById('backButton').addEventListener('click', () => {
-                categoriesDialog.style.display = 'none'; // Скрыть категории
+            if (availablePromoCodes.length === 0) {
+                alert('Все промокоды уже активированы!');
+                return;
+            }
+
+            // Случайно выбираем доступный промокод
+            const promoCode = availablePromoCodes[Math.floor(Math.random() * availablePromoCodes.length)];
+            claimedPromoCodes.push(promoCode);
+            document.getElementById('promoCodeDisplay').innerText = promoCode;
+
+            // Показываем диалог с промокодом
+            document.getElementById('promoCodeDialog').style.display = 'block';
+            document.getElementById('inputCodeDialog').style.display = 'none';
+        }
+        document.getElementById('menuButton').addEventListener('click', showAccessCodeDialog);
+
+        document.getElementById('submitCodeButton').addEventListener('click', function () {
+            const inputCode = document.getElementById('accessCode').value;
+            const codeMessage = document.getElementById('codeMessage');
+
+            if (codesdostup.includes(inputCode)) {
+                codeMessage.innerText = 'Код доступа подтвержден!';
+                // Устанавливаем дату последнего успешного ввода здесь
+                const now = new Date();
+                localStorage.setItem('lastClaimDate', now);
+                document.getElementById('backToMenu').style.display = 'block';
+                claimPromoCode(); // Пробуем получить промокод
+            } else {
+                codeMessage.innerText = 'Неверный код доступа. Попробуйте снова.';
+            }
+        });
+
+        document.getElementById('backToMenu').addEventListener('click', showAccessCodeDialog);
+
+        document.getElementById('copyPromoCodeButton').addEventListener('click', function () {
+            const promoCode = document.getElementById('promoCodeDisplay').innerText;
+            navigator.clipboard.writeText(promoCode).then(() => {
+                alert('Промокод скопирован!');
             });
         });
     </script>
-    
+
 </body>
+
 </html>
