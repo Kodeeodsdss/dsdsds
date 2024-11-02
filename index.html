@@ -1,84 +1,463 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бонусы</title>
+    <title>Казино</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #004d00, #00cc66);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1351012042/image_1351012042.jpg?io=getty-c-w1280'); /* Замените на ваш URL фона */
+            background-size: cover; /* Обеспечивает, чтобы изображение полностью покрывало область */
+            background-position: center; /* Центрирует изображение */
+            background-repeat: no-repeat; /* Убирает повторение изображения */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+
+        #loader, #connection-warning, #projectsModal {
+            display: none;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 8px solid #ffcc00;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* Стили диалогов */
+        #inputCodeDialog,
+        #promoCodeDialog {
+            margin: 20px auto; /* Автоматическое центрирование */
+            padding: 20px; /* Внутренние отступы */
+            border: 1px solid #ccc; /* Рамка */
+            display: none; /* Скрыто по умолчанию */
+            width: 90%; /* Увеличенная ширина для мобильных устройств */
+            max-width: 400px; /* Максимальная ширина для больших экранов */
+            border-radius: 10px; /* Закругленные углы */
+            background-color: #8812e4; /* Фон диалогов желтый */
+            position: relative; /* Относительное позиционирование для правильного отображения */
+            z-index: 1001; /* Убедитесь, что диалоги будут поверх фона */
+            text-align: center; /* Центрирование текста */
+            color: black; /* Цвет текста черный */
+        }
+
+        /* Основные стили кнопок */
+        button, .option-button {
+            padding: 10px;
+            margin: 5px auto; /* Центрирование */
+            background-color: #8812e4; /* Цвет фона кнопки */
+            border: none; /* Убираем рамку */
+            border-radius: 5px; /* Закругление углов */
+            cursor: pointer; /* Курсор указатель */
+            width: 80%; /* Ширина кнопок */
+            font-size: 18px; /* Размер шрифта */
+            transition: background-color 0.3s, transform 0.3s; /* Плавный переход */
+            display: block; /* Блочный элемент для автоматического центрирования */
+            color: #ffffff; /* Цвет текста кнопок черный */
+        }
+
+            button:hover, .option-button:hover {
+                 /* Цвет фона кнопки при наведении */
+                transform: scale(1.05); /* Эффект увеличения при наведении */
+            }
+
+
+        /* Адаптивные изменения */
+        @media (max-width: 600px) {
+            #inputCodeDialog,
+            #promoCodeDialog {
+                margin: 10px auto; /* Уменьшение внешних отступов для мобильных */
+                padding: 15px; /* Уменьшение внутренних отступов */
+                width: 90%; /* Ширина для мобильных устройств */
+                max-width: 300px; /* Максимальная ширина для мобильных устройств */
+            }
+
+            button, .option-button {
+                font-size: 16px; /* Размер шрифта кнопок для мобильных */
+            }
+        }
+
+/* Стили для содержимого и диалогов категорий */
+#content, 
+#categoriesDialog {
+    width: 95%; /* Увеличенная ширина для мобильных */
+    margin: 20px auto; /* Центрирование */
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 600px) {
+    #inputCodeDialog, 
+    #promoCodeDialog {
+        margin: 10px auto; /* Уменьшение внешних отступов для мобильных */
+        padding: 15px; /* Уменьшение внутренних отступов */
+        width: 90%; /* Пока любой экран */
+    }
+
+    button, .option-button {
+        font-size: 16px; /* Уменьшение размера шрифта на мобильных */
+        padding: 8px; /* Уменьшение отступов кнопок */
+    }
+}
+
         .bottom-menu {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            justify-content: space-evenly; /* Равномерное распределение элементов */
+            width: 100%;
+            padding: 5px 0; /* Уменьшено значение padding для уменьшения высоты */
+            background: transparent; /* Убираем фон */
+            box-shadow: none; /* Убираем тень */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 85px; /* Установите желаемую высоту */
+            border: none; /* Убираем рамку */
         }
 
         .icon-button {
-            background: none;
-            border: none;
+            background: transparent; /* Убираем фон */
+            border: none; /* Убираем рамку */
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+            width: 60px; /* Ширина для мобильных устройств */
         }
 
-        #menuDialog,
-        #inputCodeDialog {
+            .icon-button p {
+                color: #FFFFFF; /* Установите нужный цвет текста (например, белый) */
+                font-size: 14px; /* Установите нужный размер шрифта */
+                margin: 0; /* Убираем отступы */
+            }
+
+            .icon-button:hover {
+                transform: scale(1.1);
+            }
+
+                .icon-button:hover p {
+                    color: #FFD700; /* Цвет текста при наведении */
+                }
+
+            .icon-button img {
+                width: 35px; /* Размер иконок для мобильного просмотра */
+                height: 35px; /* Размер иконок для мобильного просмотра */
+                margin-bottom: 0px; /* Отступ снизу от иконки до текста */
+                border: 2px solid #8812e4; /* Обводка иконок золотого цвета */
+                border-radius: 50%; /* Скругление углов для обводки */
+                padding: 5px; /* Отступ между иконкой и обводкой */
+                background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для иконок (по желанию) */
+            }
+
+
+
+
+
+
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000; /* Черный фон загрузки */
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .view-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color:  #8812e4; /* Цвет фона кнопки */
+            color: white; /* Цвет текста */
+            text-decoration: none; /* Убираем подчеркивание */
+            border-radius: 5px; /* Скругление углов */
+            transition: background-color 0.3s; /* Плавный переход цвета фона */
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* Цвет фона при наведении */
+        }
+
+        .loading-text {
+            text-align: center;
+            font-family: 'Quattrocento Sans', sans-serif;
+            font-size: 3rem; /* Размер шрифта для GAMBLING */
+            margin-bottom: 20px; /* Отступ между GAMBLING и SNG */
+        }
+
+        .loading-text-sng {
+            font-size: 2rem; /* Размер шрифта для SNG */
+        }
+
+            .loading-text span,
+            .loading-text-sng span {
+                display: inline-block;
+                color: #fff;
+                animation: blur-text 1.5s infinite alternate;
+            }
+
+                /* Анимация для каждого символа текста GAMBLING */
+                .loading-text span:nth-child(1) {
+                    animation-delay: 0s;
+                }
+
+                .loading-text span:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+
+                .loading-text span:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+
+                .loading-text span:nth-child(4) {
+                    animation-delay: 0.6s;
+                }
+
+                .loading-text span:nth-child(5) {
+                    animation-delay: 0.8s;
+                }
+
+                .loading-text span:nth-child(6) {
+                    animation-delay: 1.0s;
+                }
+
+                .loading-text span:nth-child(7) {
+                    animation-delay: 1.2s;
+                }
+
+            /* Анимация для текста SNG */
+            .loading-text-sng span {
+                display: inline-block;
+                color: #fff;
+                animation: blur-text 1.5s infinite alternate;
+            }
+
+                .loading-text-sng span:nth-child(1) {
+                    animation-delay: 0s;
+                }
+
+                .loading-text-sng span:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+
+                .loading-text-sng span:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+
+        @keyframes blur-text {
+            0% {
+                filter: blur(0px);
+            }
+
+            100% {
+                filter: blur(4px);
+            }
+        }
+
+        /* Стили для поля ввода кода доступа */
+        #accessCode {
+            width: 85%; /* Ширина 100% для заполнения контейнера */
+            padding: 10px; /* Внутренние отступы */
+            margin: 10px 0; /* Отступ сверху и снизу */
+            border: 1px solid #ccc; /* Рамка */
+            border-radius: 5px; /* Закругленные углы */
+            font-size: 16px; /* Размер шрифта */
+            color: black; /* Цвет текста */
+            background-color: #f9f9f9; /* Фоновый цвет */
+            transition: border-color 0.3s; /* Плавный переход для изменения рамки */
+        }
+
+            /* Стили для поля ввода при наведении и фокусе */
+            #accessCode:focus {
+                border-color: #ffcc00; /* Цвет рамки при фокусе */
+                outline: none; /* Убирать стандартный контур браузера */
+                background-color: #fff; /* Изменяем цвет фона при фокусе */
+            }
+
+
+        .modal {
             display: none;
-            border: 1px solid #ccc;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background-color: #2C3E50;
+            margin: auto;
             padding: 20px;
-            position: absolute;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            border: 1px solid #888;
+            width: 80%;
+            color: #ECF0F1;
+            text-align: center;
+        }
+
+        .casino-image {
+            width: 100%;
+            max-width: 300px;
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+       
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body>
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Загрузка...</p>
+    </div>
 
+    <div id="connection-warning">
+        <p>Плохое соединение с интернетом!</p>
+        <button id="refreshButton">Обновить</button>
+    </div>
+
+    <div class="loading">
+        <div class="loading-text">
+            <span>G</span>
+            <span>A</span>
+            <span>M</span>
+            <span>B</span>
+            <span>L</span>
+            <span>I</span>
+            <span>N</span>
+            <span>G</span>
+        </div>
+        <div class="loading-text-sng">
+            <span>S</span>
+            <span>N</span>
+            <span>G</span>
+        </div>
+    </div>
+
+    <div id="categoriesDialog" style="display: none;">
+        <h2>Выберите категорию</h2>
+        <button class="option-button" id="casinoOption">Топовые казино</button>
+        <button class="option-button" id="noDepositOption">RTP+++</button>
+        <button class="option-button" id="otherOption">ROYAL</button>
+        <button class="option-button" id="otherOption">CAT</button>
+        <button class="option-button" id="otherOption">РЕКОМЕНДАЦИИ</button>
+        <button class="option-button" id="otherOption">ПРОЧЕЕ</button>
+        <button class="option-button" id="backButton">Назад к меню</button>
+    </div>
+
+    <div id="content" style="display: none;"></div>
+
+    <div class="modal" id="casinoModal">
+        <div class="modal-content">
+            <span class="close" id="closeCasinoModal">&times;</span>
+            <img class="casino-image" id="modalCasinoImage" src="" alt="Казино">
+            <h2 id="modalCasinoTitle"></h2>
+            <p id="modalCasinoDescription"></p>
+            <a id="playBonusButton" class="option-button" href="#" target="_blank">Узнать больше</a>
+            <a id="casinoLinkButton" class="option-button" href="#" target="_blank">Забрать бонус🎁</a> <!-- Новая кнопка -->
+        </div>
+    </div>
     <div class="bottom-menu">
         <button class="icon-button" id="menuButton">
-            <p>Бонусы</p>
+            <img src="https://img.icons8.com/ios/50/ffffff/menu-2.png" alt="Меню">
+            <p>Меню</p>
         </button>
         <button class="icon-button" id="bonusesButton">
-            <p>Меню</p>
+            <img src="https://img.icons8.com/ios/50/ffffff/gift.png" alt="Бонусы">
+            <p>Бонусы</p>
         </button>
     </div>
 
     <!-- Диалог для ввода кода -->
-    <div id="inputCodeDialog">
+    <div id="inputCodeDialog" class="modal">
+        <button class="close-button" id="closeInputDialog">&times;</button> <!-- Кнопка закрытия -->
         <h3>Введите код доступа</h3>
         <input type="text" id="accessCode" placeholder="Код доступа">
+
         <button id="submitCodeButton">Подтвердить</button>
+
         <p id="codeMessage"></p>
         <button id="backToMenu" style="display:none;">Назад в меню</button>
+        <button id="claimPromoButton" style="display:none;">Получить промокод</button>
     </div>
 
     <!-- Диалог для получения промокода -->
-    <div id="promoCodeDialog" style="display:none;">
+    <div id="promoCodeDialog" class="modal">
+        <button class="close-button" id="closePromoCodeDialog">&times;</button> <!-- Кнопка закрытия -->
         <h3>Промокод получен!</h3>
         <p id="promoCodeDisplay"></p>
         <button id="copyPromoCodeButton">Скопировать промокод</button>
-        <button id="claimNewCodeButton" style="display:none;">Получить новый промокод</button>
     </div>
 
     <script>
+
+
+
         const codesdostup = ['ACCESS123', 'ACCESS456', 'ACCESS789']; // Доступные коды доступа
         const promoCodes = ['BONUS2023', 'PROMO123', 'FREEPLAY456']; // Промокоды
         let claimedPromoCodes = []; // Активированные промокоды
+        let claimedAccessCodes = []; // Активированные коды доступа
 
         function showAccessCodeDialog() {
             document.getElementById('inputCodeDialog').style.display = 'block';
             document.getElementById('codeMessage').innerText = '';
             document.getElementById('accessCode').value = '';
+            document.getElementById('claimPromoButton').style.display = 'none';
+            document.getElementById('backToMenu').style.display = 'none';
+
             const lastClaimDateStr = localStorage.getItem('lastClaimDate');
 
-            // Проверка, если прошло 7 дней с последнего ввода кода доступа
             if (lastClaimDateStr) {
                 const lastClaimDate = new Date(lastClaimDateStr);
                 const now = new Date();
                 const daysSinceLastClaim = Math.floor((now - lastClaimDate) / (1000 * 60 * 60 * 24));
+
                 if (daysSinceLastClaim < 7) {
-                    document.getElementById('codeMessage').innerText = `Вы сможете ввести код доступа только через ${7 - daysSinceLastClaim} дней.`;
+                    const remainingDays = 6 - daysSinceLastClaim; // Оставшиеся дни до 7
+                    const remainingTimeInMilliseconds = (7 * 24 * 60 * 60 * 1000) - (now - lastClaimDate);
+
+                    const remainingHours = Math.floor((remainingTimeInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const remainingMinutes = Math.floor((remainingTimeInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+                    document.getElementById('codeMessage').innerText =
+                        `Вы сможете ввести код доступа только через ${remainingDays} дней, ${remainingHours} часов и ${remainingMinutes} минут.`;
                     document.getElementById('submitCodeButton').disabled = true;
                 } else {
                     document.getElementById('submitCodeButton').disabled = false;
@@ -88,42 +467,56 @@
             }
         }
 
+        function showPromoCodeDialog(promoCode) {
+            document.getElementById('promoCodeDisplay').innerText = promoCode;
+            document.getElementById('promoCodeDialog').style.display = 'block';
+            document.getElementById('inputCodeDialog').style.display = 'none';
+        }
+
         function claimPromoCode() {
             const availablePromoCodes = promoCodes.filter(code => !claimedPromoCodes.includes(code));
-
             if (availablePromoCodes.length === 0) {
                 alert('Все промокоды уже активированы!');
                 return;
             }
 
-            // Случайно выбираем доступный промокод
             const promoCode = availablePromoCodes[Math.floor(Math.random() * availablePromoCodes.length)];
             claimedPromoCodes.push(promoCode);
-            document.getElementById('promoCodeDisplay').innerText = promoCode;
-
-            // Показываем диалог с промокодом
-            document.getElementById('promoCodeDialog').style.display = 'block';
-            document.getElementById('inputCodeDialog').style.display = 'none';
+            showPromoCodeDialog(promoCode);
         }
-        document.getElementById('menuButton').addEventListener('click', showAccessCodeDialog);
+
+        document.getElementById('bonusesButton').addEventListener('click', showAccessCodeDialog);
 
         document.getElementById('submitCodeButton').addEventListener('click', function () {
-            const inputCode = document.getElementById('accessCode').value;
+
+
+            const inputCode = document.getElementById('accessCode').value.trim();
             const codeMessage = document.getElementById('codeMessage');
 
-            if (codesdostup.includes(inputCode)) {
+            console.log('Код доступа:', inputCode); // Для отладки
+
+            if (codesdostup.includes(inputCode) && !claimedAccessCodes.includes(inputCode)) {
                 codeMessage.innerText = 'Код доступа подтвержден!';
-                // Устанавливаем дату последнего успешного ввода здесь
-                const now = new Date();
-                localStorage.setItem('lastClaimDate', now);
+                claimedAccessCodes.push(inputCode); // Сохраняем активированный код доступа
+                localStorage.setItem('lastClaimDate', new Date()); // Устанавливаем дату успешного ввода
                 document.getElementById('backToMenu').style.display = 'block';
-                claimPromoCode(); // Пробуем получить промокод
+                document.getElementById('claimPromoButton').style.display = 'block'; // Показываем кнопку получения промокода
+                document.getElementById('submitCodeButton').disabled = true; // Отключаем кнопку подтверждения
+            } else if (claimedAccessCodes.includes(inputCode)) {
+                codeMessage.innerText = 'Этот код доступа уже был активирован.';
             } else {
                 codeMessage.innerText = 'Неверный код доступа. Попробуйте снова.';
             }
         });
 
-        document.getElementById('backToMenu').addEventListener('click', showAccessCodeDialog);
+        document.getElementById('claimPromoButton').addEventListener('click', claimPromoCode);
+
+        document.getElementById('backToMenu').addEventListener('click', function () {
+            document.getElementById('inputCodeDialog').style.display = 'none';
+            document.getElementById('backToMenu').style.display = 'none';
+            document.getElementById('promoCodeDialog').style.display = 'none';
+            document.getElementById('codeMessage').innerText = '';
+        });
 
         document.getElementById('copyPromoCodeButton').addEventListener('click', function () {
             const promoCode = document.getElementById('promoCodeDisplay').innerText;
@@ -131,8 +524,181 @@
                 alert('Промокод скопирован!');
             });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoriesDialog = document.getElementById('categoriesDialog');
+            const contentDiv = document.getElementById('content');
+            const casinoModal = document.getElementById('casinoModal');
+            const modalCasinoImage = document.getElementById('modalCasinoImage');
+            const modalCasinoTitle = document.getElementById('modalCasinoTitle');
+            const modalCasinoDescription = document.getElementById('modalCasinoDescription');
+            const playBonusButton = document.getElementById('playBonusButton');
+
+            // Данные о казино
+            const casinos = {
+                'Топовые казино': [
+                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+                'RTP++': [
+                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+                'ROYAL': [
+                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+                'CAT': [
+                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+
+                'РЕКОМЕНДАЦИИ': [
+                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                ],
+                'ПРОЧЕЕ': [
+                    { name: 'Даргон', description: 'Бездепозитный бонус от Даргон.', image: 'dargon.jpg', link: 'https://example.com/dargon-bonus' },
+                    { name: 'Битз', description: 'Бездепозитный бонус от Битз.', image: 'bitz.jpg', link: 'https://example.com/bitz-bonus' }
+                ]
+            };
+
+            // Открытие окна с категориями
+            document.getElementById('menuButton').addEventListener('click', () => {
+                categoriesDialog.style.display = 'block'; // Показать категории
+            });
+
+            // Обработка нажатий на категории
+            document.querySelectorAll('#categoriesDialog .option-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const category = event.target.textContent;
+                    if (casinos[category]) {
+                        loadContent(category, casinos[category]);
+                    } else {
+                        categoriesDialog.style.display = 'none'; // Скрыть категории, если нажатие не на категорию
+                    }
+                });
+            });
+
+            document.getElementById('closeInputDialog').addEventListener('click', function () {
+                closeInputDialog();
+            });
+
+            // Для закрытия диалога получения промокода
+            document.getElementById('closePromoCodeDialog').addEventListener('click', function () {
+                closePromoCodeDialog();
+            });
+
+            // Функция для закрытия диалога с кодом доступа
+            function closeInputDialog() {
+                document.getElementById('inputCodeDialog').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                document.body.classList.remove('hidden'); // Показываем основной контент
+            }
+
+            // Функция для закрытия диалога с промокодом
+            function closePromoCodeDialog() {
+                document.getElementById('promoCodeDialog').style.display = 'none';
+            }
+
+            // Функции для открытия диалогов
+            function showAccessCodeDialog() {
+                document.getElementById('overlay').style.display = 'block'; // Показываем затемнение
+                document.getElementById('inputCodeDialog').style.display = 'block'; // Показываем диалог
+                document.body.classList.add('hidden'); // Скрываем основной контент
+            }
+
+            // Пример вызова для показа диалога
+            document.getElementById('bonusesButton').addEventListener('click', showAccessCodeDialog);
+
+            // Закрытие модальных окон при клике на фон
+            window.addEventListener('click', function (event) {
+                const inputDialog = document.getElementById('inputCodeDialog');
+                const promoDialog = document.getElementById('promoCodeDialog');
+                if (event.target === document.getElementById('overlay')) {
+                    closeInputDialog();
+                    closePromoCodeDialog();
+                }
+            });
+
+            // Функция загрузки контента по категориям
+            function loadContent(title, items) {
+                contentDiv.innerHTML = `<h1>${title}</h1>`;
+                items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.textContent = item.name;
+                    button.className = 'option-button';
+                    button.onclick = () => showCasinoInfo(item);
+                    contentDiv.appendChild(button);
+                });
+
+                const categoriesButton = document.createElement('button');
+                categoriesButton.textContent = 'К выбору категорий';
+                categoriesButton.className = 'option-button';
+                categoriesButton.onclick = () => {
+                    categoriesDialog.style.display = 'block';
+                    contentDiv.style.display = 'none';
+                };
+
+                const backToMenuButton = document.createElement('button');
+                backToMenuButton.textContent = 'Назад в меню';
+                backToMenuButton.className = 'option-button';
+                backToMenuButton.onclick = () => {
+                    contentDiv.style.display = 'none';
+                    categoriesDialog.style.display = 'none';
+                };
+
+                contentDiv.appendChild(categoriesButton);
+                contentDiv.appendChild(backToMenuButton);
+
+                contentDiv.style.display = 'block';
+                categoriesDialog.style.display = 'none'; // Скрываем категории
+            }
+
+            // Функция для отображения информации о выбранном казино
+            function showCasinoInfo(casino) {
+                modalCasinoImage.src = casino.image;
+                modalCasinoTitle.textContent = casino.name;
+                modalCasinoDescription.textContent = casino.description;
+                playBonusButton.href = casino.link; // Ссылка на игру с бонусами
+                casinoModal.style.display = 'flex'; // Показать модальное окно
+            }
+
+            // Закрытие модального окна
+            document.getElementById('closeCasinoModal').addEventListener('click', () => {
+                casinoModal.style.display = 'none'; // Скрыть модальное окно
+            });
+
+            // Закрытие модального окна при клике вне области
+            window.addEventListener('click', (event) => {
+                if (event.target == casinoModal) {
+                    casinoModal.style.display = 'none';
+                }
+            });
+            setTimeout(() => {
+                document.querySelector('.loading').style.display = 'none'; // Скрытие анимации
+                document.getElementById('bootom-menu').style.display = 'block'; // Открытие основного меню
+            }, 7000);
+
+            // Открытие модального окна при нажатии на кнопку "Проекты"
+            document.getElementById('projectsButton').addEventListener('click', () => {
+                window.open('https://t.me/GamblingSNG/2799', '_blank'); // Открытие ссылки в новой вкладке
+            });
+
+
+
+
+            // Скрытие категорий при нажатии на "Назад к меню"
+            document.getElementById('backButton').addEventListener('click', () => {
+                inputCodeDialog.style.display = 'none'; // Скрыть категории
+            });
+
+            // Скрытие категорий при нажатии на "Назад к меню"
+            document.getElementById('backButton').addEventListener('click', () => {
+                categoriesDialog.style.display = 'none'; // Скрыть категории
+            });
+        });
     </script>
 
 </body>
-
 </html>
