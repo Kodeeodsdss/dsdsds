@@ -4,26 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Казино</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(120deg, #004d00, #00cc66);
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            background-image: url('https://static.seekingalpha.com/cdn/s3/uploads/getty_images/1351012042/image_1351012042.jpg?io=getty-c-w1280'); /* Замените на ваш URL фона */
-            background-size: cover; /* Обеспечивает, чтобы изображение полностью покрывало область */
-            background-position: center; /* Центрирует изображение */
-            background-repeat: no-repeat; /* Убирает повторение изображения */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
 
+    <style>
+
+ 
 
         #loader, #connection-warning, #projectsModal {
             display: none;
+        }
+        .slider-container {
+            position: relative;
+            width: 300px; /* Ширина слайдера */
+            height: 500px; /* Высота слайдера */
+            overflow: hidden; /* Скрыть переполнение */
+            border-radius: 10px; /* Закругление углов */
+            border: 5px solid transparent; /* Прозрачная рамка для градиента */
+            background: linear-gradient(120deg, #ff0000, #0000ff); /* Градиентный фон слайдера */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease; /* Плавный переход между слайдами */
+        }
+
+        .slide {
+            min-width: 300px; /* Ширина каждого слайда */
+            transition: opacity 0.5s ease; /* Плавный переход для переключения */
+            display: none; /* Скрыть слайды по умолчанию */
+        }
+
+            .slide img {
+                width: 100%; /* Ширина изображения */
+                height: auto; /* Автоматическая высота изображения */
+                border-radius: 5px; /* Закругление углов изображения */
+            }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 1;
+        }
+
+        .prev {
+            left: 10px; /* Положение кнопки 'Назад' */
+        }
+
+        .next {
+            right: 10px; /* Положение кнопки 'Вперед' */
         }
 
         .spinner {
@@ -45,66 +80,81 @@
             }
         }
 
-
-        /* Стили диалогов */
         #inputCodeDialog,
         #promoCodeDialog {
-            margin: 20px auto; /* Автоматическое центрирование */
-            padding: 20px; /* Внутренние отступы */
-            border: 1px solid #ccc; /* Рамка */
-            display: none; /* Скрыто по умолчанию */
-            width: 90%; /* Увеличенная ширина для мобильных устройств */
-            max-width: 400px; /* Максимальная ширина для больших экранов */
-            border-radius: 10px; /* Закругленные углы */
-            background-color: #8812e4; /* Фон диалогов желтый */
-            position: relative; /* Относительное позиционирование для правильного отображения */
-            z-index: 1001; /* Убедитесь, что диалоги будут поверх фона */
-            text-align: center; /* Центрирование текста */
-            color: black; /* Цвет текста черный */
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            background-color: #8812e4;
+            position: relative;
+            z-index: 1001;
+            text-align: center;
+            color: #ffffff; /* Изменено на белый для читаемости */
         }
 
-        /* Основные стили кнопок */
         button, .option-button {
             padding: 10px;
-            margin: 5px auto; /* Центрирование */
-            background-color: #8812e4; /* Цвет фона кнопки */
-            border: none; /* Убираем рамку */
-            border-radius: 5px; /* Закругление углов */
-            cursor: pointer; /* Курсор указатель */
-            width: 80%; /* Ширина кнопок */
-            font-size: 18px; /* Размер шрифта */
-            transition: background-color 0.3s, transform 0.3s; /* Плавный переход */
-            display: block; /* Блочный элемент для автоматического центрирования */
-            color: #ffffff; /* Цвет текста кнопок черный */
+            margin: 5px auto;
+            background-color: #8812e4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80%;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+            display: block;
+            color: #ffffff;
         }
 
             button:hover, .option-button:hover {
-                 /* Цвет фона кнопки при наведении */
-                transform: scale(1.05); /* Эффект увеличения при наведении */
+                background-color: #7a0ecf; /* Изменение цвета */
+                transform: scale(1.05);
             }
 
+        .option-button {
+            position: relative;
+        }
 
-        /* Адаптивные изменения */
+            .option-button::after {
+                content: '';
+                width: 100%;
+                height: 2px;
+                background: #ffcc00;
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                transform: scaleX(0);
+                transition: transform 0.3s ease;
+            }
+
+            .option-button:hover::after {
+                transform: scaleX(1);
+            }
+
         @media (max-width: 600px) {
             #inputCodeDialog,
             #promoCodeDialog {
-                margin: 10px auto; /* Уменьшение внешних отступов для мобильных */
-                padding: 15px; /* Уменьшение внутренних отступов */
-                width: 90%; /* Ширина для мобильных устройств */
-                max-width: 300px; /* Максимальная ширина для мобильных устройств */
+                margin: 10px auto;
+                padding: 15px;
+                width: 90%;
+                max-width: 300px;
             }
 
             button, .option-button {
-                font-size: 16px; /* Размер шрифта кнопок для мобильных */
+                font-size: 16px;
             }
         }
 
-/* Стили для содержимого и диалогов категорий */
-#content, 
-#categoriesDialog {
-    width: 95%; /* Увеличенная ширина для мобильных */
-    margin: 20px auto; /* Центрирование */
-}
+        #content,
+        #categoriesDialog {
+            width: 95%;
+            margin: 20px auto;
+        }
+
 
 /* Адаптивные стили для мобильных устройств */
 @media (max-width: 600px) {
@@ -134,42 +184,28 @@
             height: 85px; /* Установите желаемую высоту */
             border: none; /* Убираем рамку */
         }
-
         .icon-button {
-            background: transparent; /* Убираем фон */
+            background-color: transparent; /* Убираем фоновый цвет */
             border: none; /* Убираем рамку */
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s;
-            width: 60px; /* Ширина для мобильных устройств */
+            cursor: pointer; /* Изменяем курсор на указатель */
         }
 
-            .icon-button p {
-                color: #FFFFFF; /* Установите нужный цвет текста (например, белый) */
-                font-size: 14px; /* Установите нужный размер шрифта */
-                margin: 0; /* Убираем отступы */
-            }
-
-            .icon-button:hover {
-                transform: scale(1.1);
-            }
-
-                .icon-button:hover p {
-                    color: #FFD700; /* Цвет текста при наведении */
-                }
-
             .icon-button img {
-                width: 35px; /* Размер иконок для мобильного просмотра */
-                height: 35px; /* Размер иконок для мобильного просмотра */
-                margin-bottom: 0px; /* Отступ снизу от иконки до текста */
-                border: 2px solid #8812e4; /* Обводка иконок золотого цвета */
-                border-radius: 50%; /* Скругление углов для обводки */
-                padding: 5px; /* Отступ между иконкой и обводкой */
-                background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для иконок (по желанию) */
+                width: 35px; /* Размер иконок */
+                height: 35px; /* Размер иконок */
+                margin-bottom: 0; /* Отступ снизу от иконки до текста */
+                border: 2px solid transparent; /* Прозрачная рамка для установки градиентной обводки */
+                background-image: linear-gradient(120deg, #ff0000, #0000ff); /* Градиентный фон для обводки */
+                background-clip: padding-box; /* Обводка будет видна по краям */
+                border-radius: 50%; /* Скругление для обводки */
             }
 
+            /* Убираем фоновый цвет при фокусе и активации */
+            .icon-button:focus,
+            .icon-button:active {
+                background-color: transparent; /* Убираем фоновый цвет */
+                outline: none; /* Убираем обводку при фокусе */
+            }
 
 
 
@@ -341,6 +377,101 @@
             font-weight: bold;
             cursor: pointer;
         }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #004d00, #00cc66);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.pinimg.com/originals/2a/c2/7f/2ac27fbe3712283d77a59e47e0f157b2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Центруем по вертикали */
+            min-height: 100vh;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 250px; /* Ширина слайдера */
+            height: 150px; /* Высота слайдера */
+            overflow: hidden;
+            border-radius: 10px;
+            background:none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            display: none;
+        }
+
+            .slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: red;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 1;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-container {
+            position: relative; /* Позволяет позиционировать элементы внутри контейнера */
+        }
+
+    .slider-caption {
+    text-align: center; /* Центрируем текст */
+    color: white; /* Цвет текста */
+    font-size: 24px; /* Размер шрифта */
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон для лучшей читаемости */
+    padding: 10px 20px; /* Отступы вокруг текста */
+    border-radius: 5px; /* Скругление углов фона */
+    margin-bottom: 10px; /* Отступ снизу, чтобы отделить от слайдера */
+}
+
+        .slider {
+            position: relative; /* Позволяет позиционировать слайды внутри контейнера */
+        }
+
+        .slide {
+            display: none; /* Скрываем все слайды по умолчанию */
+        }
+
+            .slide.active {
+                display: block; /* Показываем только активный слайд */
+            }
+
+
+        .prev {
+            left: 5px;
+        }
+
+        .next {
+            right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -371,17 +502,61 @@
             <span>G</span>
         </div>
     </div>
-<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="GamblingSNG/3747" data-width="100%"></script>
+
     <div id="categoriesDialog" style="display: none;">
         <h2>Выберите категорию</h2>
-        <button class="option-button" id="casinoOption">Топовые казино</button>
-        <button class="option-button" id="noDepositOption">RTP+++</button>
-        <button class="option-button" id="otherOption">ROYAL</button>
-        <button class="option-button" id="otherOption">CAT</button>
-        <button class="option-button" id="otherOption">РЕКОМЕНДАЦИИ</button>
-        <button class="option-button" id="otherOption">ПРОЧЕЕ</button>
-        <button class="option-button" id="backButton">Назад к меню</button>
+
+        <button class="option-button" id="casinoOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/casino.png" alt="Казино" style="width: 24px; height: 24px; vertical-align: middle;">
+            Топовые казино
+        </button>
+        <button class="option-button" id="noDepositOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/money.png" alt="Нет депозита" style="width: 24px; height: 24px; vertical-align: middle;">
+            RTP+++
+        </button>
+        <button class="option-button" id="royalOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/crown.png" alt="Корона" style="width: 24px; height: 24px; vertical-align: middle;">
+            ROYAL
+        </button>
+        <button class="option-button" id="catOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/paw-print.png" alt="Кот" style="width: 24px; height: 24px; vertical-align: middle;">
+            CAT
+        </button>
+        <button class="option-button" id="recommendationsOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/idea.png" alt="Идея" style="width: 24px; height: 24px; vertical-align: middle;">
+            РЕКОМЕНДАЦИИ
+        </button>
+        <button class="option-button" id="otherOption">
+            <img src="https://img.icons8.com/ios/50/ffffff/options.png" alt="Другие" style="width: 24px; height: 24px; vertical-align: middle;">
+            ПРОЧЕЕ
+        </button>
+        <button class="option-button" id="backButton">
+            <img src="https://img.icons8.com/ios/50/ffffff/back.png" alt="Назад" style="width: 24px; height: 24px; vertical-align: middle;">
+            Назад к меню
+        </button>
     </div>
+   <div class="slider-container" id="sliderContainer">
+    <!-- Добавляем надпись над слайдерами -->
+   
+    
+    <div class="slider">
+        <div class="slide active">
+            <img src="https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album" alt="Изображение 1">
+        </div>
+        <div class="slide">
+            <img src="https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album" alt="Изображение 2">
+        </div>
+        <div class="slide">
+            <img src="https://via.placeholder.com/300x500/0000ff/ffffff?text=Image+3" alt="Изображение 3">
+        </div>
+    </div>
+    
+    <button class="slider-button prev" onclick="changeSlide(-1)">❮</button>
+    <button class="slider-button next" onclick="changeSlide(1)">❯</button>
+</div>
+
+
+    <button id="showPartnersButton">Скрыть партнеров</button>
 
     <div id="content" style="display: none;"></div>
 
@@ -404,7 +579,9 @@
             <img src="https://img.icons8.com/ios/50/ffffff/gift.png" alt="Бонусы">
             <p>Бонусы</p>
         </button>
+
     </div>
+
 
     <!-- Диалог для ввода кода -->
     <div id="inputCodeDialog" class="modal">
@@ -428,8 +605,68 @@
     </div>
 
     <script>
+        let slideIndex = 0;
 
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            if (index >= slides.length) {
+                slideIndex = 0; // Сброс индекса
+            }
+            if (index < 0) {
+                slideIndex = slides.length - 1; // Вернуться к последнему слайду
+            }
 
+            slides.forEach(slide => {
+                slide.style.display = 'none'; // Скрыть все слайды
+            });
+
+            slides[slideIndex].style.display = 'block'; // Показать текущий слайд
+        }
+
+        function changeSlide(direction) {
+            slideIndex += direction;
+            showSlide(slideIndex);
+        }
+
+        // Инициализация слайдера
+        showSlide(slideIndex);
+
+        // Обработчик для кнопки "Показать партнеров"
+        document.getElementById('showPartnersButton').addEventListener('click', function () {
+            const sliderContainer = document.getElementById('sliderContainer');
+
+            // Переключение видимости слайдера
+            if (sliderContainer.style.display === 'none' || sliderContainer.style.display === '') {
+                sliderContainer.style.display = 'block'; // Показать слайдер
+                this.textContent = 'Скрыть партнеров'; // Изменить текст кнопки
+            } else {
+                sliderContainer.style.display = 'none'; // Скрыть слайдер
+                this.textContent = 'Показать партнеров'; // Вернуть текст кнопки
+            }
+        });
+
+        // Функция для скрытия слайдера и кнопки "Показать партнеров"
+        const hideSliderAndButton = () => {
+            document.getElementById('sliderContainer').style.display = 'none';
+            document.getElementById('showPartnersButton').style.display = 'none';
+        };
+
+        // Обработчики для кнопок в нижнем меню
+        document.getElementById('menuButton').addEventListener('click', () => {
+            hideSliderAndButton();
+            document.getElementById('backButton').style.display = 'block'; // Показать кнопку "Назад"
+        });
+
+        document.getElementById('bonusesButton').addEventListener('click', () => {
+            hideSliderAndButton();
+            document.getElementById('backButton').style.display = 'block'; // Показать кнопку "Назад"
+        });
+
+        // Обработчик для кнопки "Назад"
+        document.getElementById('backButton').addEventListener('click', () => {
+            document.getElementById('backButton').style.display = 'none'; // Скрыть кнопку "Назад"
+            document.getElementById('showPartnersButton').style.display = 'block'; // Показать кнопку "Показать партнеров"
+        });
 
         const codesdostup = ['ACCESS123', 'ACCESS456', 'ACCESS789']; // Доступные коды доступа
         const promoCodes = ['BONUS2023', 'PROMO123', 'FREEPLAY456']; // Промокоды
@@ -537,10 +774,10 @@
             // Данные о казино
             const casinos = {
                 'Топовые казино': [
-                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
+                    { name: '🍸 CASINO VODKA', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
                     { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
                 ],
-                'RTP++': [
+                'RTP+++': [
                     { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
                     { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
                 ],
@@ -563,7 +800,7 @@
                 ]
             };
 
-            // Открытие окна с категориями
+
             document.getElementById('menuButton').addEventListener('click', () => {
                 categoriesDialog.style.display = 'block'; // Показать категории
             });
@@ -571,11 +808,12 @@
             // Обработка нажатий на категории
             document.querySelectorAll('#categoriesDialog .option-button').forEach(button => {
                 button.addEventListener('click', (event) => {
-                    const category = event.target.textContent;
+                    const category = button.textContent.trim(); // Берем текст кнопки
+
                     if (casinos[category]) {
                         loadContent(category, casinos[category]);
                     } else {
-                        categoriesDialog.style.display = 'none'; // Скрыть категории, если нажатие не на категорию
+                        categoriesDialog.style.display = 'none'; // Скрыть категории по умолчанию
                     }
                 });
             });
@@ -639,13 +877,15 @@
                     categoriesDialog.style.display = 'block';
                     contentDiv.style.display = 'none';
                 };
-
                 const backToMenuButton = document.createElement('button');
                 backToMenuButton.textContent = 'Назад в меню';
                 backToMenuButton.className = 'option-button';
                 backToMenuButton.onclick = () => {
                     contentDiv.style.display = 'none';
-                    categoriesDialog.style.display = 'none';
+                    categoriesDialog.style.display = 'none'; // Скрываем категории
+
+                    // Показываем кнопку "Показать партнеров"
+                    showPartnersButton.style.display = 'block'; // Предполагается, что у вас есть переменная showPartnersButton
                 };
 
                 contentDiv.appendChild(categoriesButton);
