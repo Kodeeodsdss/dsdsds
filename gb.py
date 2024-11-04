@@ -13,8 +13,8 @@ codes_private = ['CODE1', 'CODE2', 'CODE3']  # Добавьте свои код�
 used_codes = []  # Список использованных кодов
 
 # Идентификаторы канала и чата
-CHAT_ID = '@your_chat_id'  # Замените на ваш ID чата
-CHANNEL_ID = '@your_channel_id'  # Замените на ваш ID канала
+CHAT_ID = '@kazinochatfree'  # Замените на ваш ID чата
+CHANNEL_ID = '@GamblingSNG'  # Замените на ваш ID канала
 
 # Функция для старта
 def start(update: Update, context: CallbackContext) -> None:
@@ -108,7 +108,7 @@ def get_code(update: Update, context: CallbackContext):
 # Основная функция для запуска бота
 def main():
     # Замените TOKEN на ваш токен бота
-    updater = Updater("YOUR_BOT_TOKEN")
+    updater = Updater("6691638999:AAHHB9EBkN_Zkbz0gpsEICPZz7er-HAAWME")
 
     # Получаем диспетчер для регистрации обработчиков
     dispatcher = updater.dispatcher
