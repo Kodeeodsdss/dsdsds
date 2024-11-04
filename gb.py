@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 import random
 
 # Настройка логирования
@@ -23,8 +23,8 @@ async def check_subscription(user_id, chat_id, context):
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [InlineKeyboardButton("Чат", url='https://t.me/kazinochatfree')],
-        [InlineKeyboardButton("Канал", url='https://t.me/GamblingSNG')],
+        [InlineKeyboardButton("Чат", url='https://t.me/your_chat')],
+        [InlineKeyboardButton("Канал", url='https://t.me/your_channel')],
         [InlineKeyboardButton("Проверить подписку", callback_data='check_subscription')]
     ]
     
@@ -37,8 +37,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     user_id = query.from_user.id
-    channel_id = '@GamblingSNG'  # Замените на ваш ID или юзернейм канала
-    chat_id = '@kazinochatfree'  # Замените на ваш ID или юзернейм чата
+    channel_id = '@your_channel'  # Замените на ваш ID или юзернейм канала
+    chat_id = '@your_chat'  # Замените на ваш ID или юзернейм чата
 
     if query.data == 'check_subscription':
         channel_subscribed = await check_subscription(user_id, channel_id, context)
@@ -62,13 +62,12 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Запуск бота
 def main():
-    updater = Updater("6691638999:AAHHB9EBkN_Zkbz0gpsEICPZz7er-HAAWME")
+    application = ApplicationBuilder().token("6691638999:AAHHB9EBkN_Zkbz0gpsEICPZz7er-HAAWME").build()
 
-    updater.dispatcher.add_handler(CommandHandler("start", start))
-    updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button))
 
-    updater.start_polling()
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
