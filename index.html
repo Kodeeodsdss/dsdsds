@@ -13,32 +13,29 @@
             display: none;
         }
         .slider-container {
-            position: relative;
-            width: 300px; /* Ширина слайдера */
-            height: 500px; /* Высота слайдера */
-            overflow: hidden; /* Скрыть переполнение */
-            border-radius: 10px; /* Закругление углов */
-            border: 5px solid transparent; /* Прозрачная рамка для градиента */
-            background: linear-gradient(120deg, #ff0000, #0000ff); /* Градиентный фон слайдера */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
+    position: relative;
+    width: 10000px; /* Увеличьте ширину слайдера */
+    height: 8000px; /* Увеличьте высоту слайдера */
+    overflow: hidden;
+    border-radius: 10px;
+    border: 5px solid transparent;
+    background: linear-gradient(120deg, #ff0000, #0000ff);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
 
-        .slider {
-            display: flex;
-            transition: transform 0.5s ease; /* Плавный переход между слайдами */
-        }
+.slide {
+    min-width: 100000px; /* Увеличьте ширину каждого слайда */
+    transition: opacity 0.5s ease;
+    display: none;
+}
 
-        .slide {
-            min-width: 300px; /* Ширина каждого слайда */
-            transition: opacity 0.5s ease; /* Плавный переход для переключения */
-            display: none; /* Скрыть слайды по умолчанию */
-        }
+.slide img {
+    width: 1000%; /* Делаем ширину изображения 100% */
+    height: 1000%; /* Делаем высоту 100% */
+    object-fit: cover; /* Обрезаем изображение, чтобы оно заполнило контейнер */
+    border-radius: 5px;
+}
 
-            .slide img {
-                width: 100%; /* Ширина изображения */
-                height: auto; /* Автоматическая высота изображения */
-                border-radius: 5px; /* Закругление углов изображения */
-            }
 
         .slider-button {
             position: absolute;
@@ -507,7 +504,7 @@
         <h2>Выберите категорию</h2>
 
         <button class="option-button" id="casinoOption">
-            <img src="https://img.icons8.com/ios/50/ffffff/casino.png" alt="Казино" style="width: 24px; height: 24px; vertical-align: middle;">
+            <img src="https://img.icons8.com/ios/50/ffffff/money.png" alt="Казино" style="width: 24px; height: 24px; vertical-align: middle;">
             Топовые казино
         </button>
         <button class="option-button" id="noDepositOption">
@@ -519,7 +516,7 @@
             ROYAL
         </button>
         <button class="option-button" id="catOption">
-            <img src="https://img.icons8.com/ios/50/ffffff/paw-print.png" alt="Кот" style="width: 24px; height: 24px; vertical-align: middle;">
+            <img src="https://img.icons8.com/ios/50/ffffff/cat.png" alt="Кот" style="width: 24px; height: 24px; vertical-align: middle;">
             CAT
         </button>
         <button class="option-button" id="recommendationsOption">
@@ -544,10 +541,21 @@
             <img src="https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album" alt="Изображение 1">
         </div>
         <div class="slide">
-            <img src="https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album" alt="Изображение 2">
+            <img src="bitz1.jpg" alt="Изображение 2">
         </div>
         <div class="slide">
-            <img src="https://via.placeholder.com/300x500/0000ff/ffffff?text=Image+3" alt="Изображение 3">
+            <img src="crypto.jpg" alt="Изображение 3">
+        </div>
+
+
+        <div class="slide">
+            <img src="kometa.jpg" alt="Изображение 2">
+        </div>
+        <div class="slide">
+            <img src="gizbo.jpg" alt="Изображение 2">
+        </div>
+        <div class="slide">
+            <img src="betb7.jpg" alt="Изображение 2">
         </div>
     </div>
     
@@ -566,8 +574,9 @@
             <img class="casino-image" id="modalCasinoImage" src="" alt="Казино">
             <h2 id="modalCasinoTitle"></h2>
             <p id="modalCasinoDescription"></p>
-            <a id="playBonusButton" class="option-button" href="#" target="_blank">Узнать больше</a>
-            <a id="casinoLinkButton" class="option-button" href="#" target="_blank">Забрать бонус🎁</a> <!-- Новая кнопка -->
+           
+            <a id="casinoLinkButton" class="option-button" href="https://t.me/GamblingSNG/3243" target="_blank">Узнать больше❓</a>
+            <a id="playBonusButton" class="option-button" href="#" target="_blank">Забрать бонус🎁</a> <!-- Новая кнопка -->
         </div>
     </div>
     <div class="bottom-menu">
@@ -600,6 +609,7 @@
     <div id="promoCodeDialog" class="modal">
         <button class="close-button" id="closePromoCodeDialog">&times;</button> <!-- Кнопка закрытия -->
         <h3>Промокод получен!</h3>
+        <h3>Во избежании ошибок - скопируйте промокод вручную, иначе он будет безвозвратно утерян!</h3>
         <p id="promoCodeDisplay"></p>
         <button id="copyPromoCodeButton">Скопировать промокод</button>
     </div>
@@ -668,8 +678,193 @@
             document.getElementById('showPartnersButton').style.display = 'block'; // Показать кнопку "Показать партнеров"
         });
 
-        const codesdostup = ['ACCESS123', 'ACCESS456', 'ACCESS789']; // Доступные коды доступа
-        const promoCodes = ['BONUS2023', 'PROMO123', 'FREEPLAY456']; // Промокоды
+        const codesdostup = [
+    'access--G80UOVmM',
+    'access--9InxDu5Y',
+    'access--fdxq4jIX',
+    'access--u8rTLTvI',
+    'access--UUpShlS6',
+    'access--Jnqwma76',
+    'access--3CfYepQx',
+    'access--lE1yru7R',
+    'access--PyVa7RSp',
+    'access--9qxnX9uX',
+    'access--LlGD0zm1',
+    'access--nRu75qPu',
+    'access--lWwfbc9C',
+    'access--os80E26J',
+    'access--MtEfsJR9',
+    'access--EN6VILdZ',
+    'access--2S3H9ygS',
+    'access--0ctedLsH',
+    'access--9zBLOgBG',
+    'access--b2DGGHlR',
+    'access--AZE7UzxC',
+    'access--jskCnu39',
+    'access--cZlXK27c',
+    'access--t0bfLCNk',
+    'access--PiZw6wTV',
+    'access--1068GLVl',
+    'access--SdM666NQ',
+    'access--MqPQBct5',
+    'access--RHKrmF76',
+    'access--lX5B9FSz',
+    'access--k3HN402K',
+    'access--JzfC1PZu',
+    'access--VRAFr0AF',
+    'access--xmGMvW0A',
+    'access--tdYD75Ln',
+    'access--YX0tsj2V',
+    'access--WFTwt885',
+    'access--F04FWvip',
+    'access--J3bvpgYM',
+    'access--0M5NPgwa',
+    'access--mvqiZi7q',
+    'access--EIXx8jN6',
+    'access--AS20ECrg',
+    'access--oLRU5M4q',
+    'access--lo3FwRD6',
+    'access--iJjcXk8z',
+    'access--7Plh166P',
+    'access--3FDuZ7Xt',
+    'access--4EsFc7T4',
+    'access--nint6hYN',
+    'access--98cQj5Wr',
+    'access--Op6Zl3iR',
+    'access--gZazoQ3x',
+    'access--PKfuQ1yB',
+    'access--EiVX5srx',
+    'access--vyp1HCDI',
+    'access--SOwPba4F',
+    'access--3EgD31nB',
+    'access--Twi9ZasP',
+    'access--wh1J2hfh',
+    'access--XEfW8Pqe',
+    'access--FFW0loBb',
+    'access--eYU03LnS',
+    'access--sWbM854O',
+    'access--gaLE3Lj6',
+    'access--9t79CeN4',
+    'access--S8xxLJDB',
+    'access--5l1Uwf6W',
+    'access--5zBotO5V',
+    'access--2PhjRa2q',
+    'access--1nWkJ2GO',
+    'access--ZvFX0lGY',
+    'access--TZjEo5NY',
+    'access--SOqJ0Kdx',
+    'access--u2rWFbX2',
+    'access--2p9tK7e3',
+    'access--TQiD4dVW',
+    'access--30ssKfWn',
+    'access--qJ2JG2iE',
+    'access--OBl37ZJk',
+    'access--Vdia3eDl',
+    'access--9x1XFHwY',
+    'access--i5zT59sm',
+    'access--npvDaC6d',
+    'access--g1Kz12GC',
+    'access--Lrb8Le2Y'
+]; // Доступные коды доступа
+        const promoCodes = [
+    'R7 - 3 euro - R7GLOGPT9P',
+    'R7 - 3 euro - R7PNC02B1I',
+    'R7 - 3 euro - R7UOZJESTJ',
+    'R7 - 3 euro - R72QN2RAL2',
+    'R7 - 3 euro - R7BSAM3SDZ',
+    'R7 - 3 euro - R7JTY5GA50',
+    'R7 - 3 euro - R72VLOSRXO',
+    'R7 - 3 euro - R7BGVT0DP',
+    
+    'R7 - FS - R7L52KX3HTL',
+    'R7 - FS - R7Z5J4AKFLF',
+    'R7 - FS - R7P5ZNO1DDJ',
+    'R7 - FS - R7X6G71IB5N',
+    'R7 - FS - R736WQEZ8XJ',
+    'R7 - FS - R7T7D9SG6P5',
+    'R7 - FS - R7N7TT5X4HG',
+    'R7 - FS - R7E8ACJE297',
+    
+    'KENT - 3 euro - KENTB7KDZP8FB',
+    'KENT - 3 euro - KENTE80XD667P',
+    'KENT - 3 euro - KENT68HGQN3ZN',
+    'KENT - 3 euro - KENTB8Y0441R9',
+    'KENT - 3 euro - KENT14UTA83JU',
+    'KENT - 3 euro - KENTZ5BCNP1BZ',
+    
+    'KENT - FS - KENTE845DXERP',
+    'KENT - FS - KENT58KORECJI',
+    'KENT - FS - KENTU9184VAB0',
+    'KENT - FS - KENT94Y1AZC3V',
+    'KENT - FS - KENTC5EKOG9V5',
+    'KENT - FS - KENTQ5V41X7NP',
+    
+    'DADDY - 3 euro - DADDY67D9BK7B5',
+    'DADDY - 3 euro - DADDYJ7TSP1534',
+    'DADDY - 3 euro - DADDYH8AC2I2VL',
+    'DADDY - 3 euro - DADDYE8QVFZ0NE',
+    'DADDY - 3 euro - DADDYG4NOM32FW',
+    'DADDY - 3 euro - DADDYJ547ZK07O',
+    
+    'DADDY - FS - DADDY67GBG4JVO',
+    'DADDY - FS - DADDYF7WUTLHNT',
+    'DADDY - FS - DADDYR8DE72FF2',
+    'DADDY - FS - DADDYJ8TXKJD7V',
+    'DADDY - FS - DADDYS4QQQNEZG',
+    'DADDY - FS - DADDY857A44CRN',
+    'DADDY - FS - DADDYU5NTHLAJH',
+    'DADDY - FS - DADDY264CV28B1',
+    
+    'GAMA - 3 euro - GAMAT7RTFO8Y1',
+    'GAMA - 3 euro - GAMAM88CT56QI',
+    'GAMA - 3 euro - GAMAS8OW6M4IH',
+    'GAMA - 3 euro - GAMA795FK32AF',
+    'GAMA - 3 euro - GAMAF4LVB282L',
+    'GAMA - 3 euro - GAMAC52EOJ5UM',
+    'GAMA - 3 euro - GAMAG5IY203MV',
+    'GAMA - 3 euro - GAMAE5ZHFH1E1',
+    
+    'GAMA - FS - GAMA0QNEWRR1',
+    'GAMA - FS - GAMAMSAY99JZ',
+    'GAMA - FS - GAMA6TYHLRBN',
+    'GAMA - FS - GAMALVM0Y93R',
+    'GAMA - FS - GAMAVGW55UVG',
+    'GAMA - FS - GAMACIJOICNS',
+    'GAMA - FS - GAMANK77UUFO',
+    'GAMA - FS - GAMAALUR7C7J',
+    'GAMA - FS - GAMALNIAJTZG',
+    
+    'CAT - 3 euro - CATK5PC7WQFW',
+    'CAT - 3 euro - CATM65VLDO7F',
+    'CAT - 3 euro - CATM6MEYULZR',
+    'CAT - 3 euro - CAT972YCBJR5',
+    'CAT - 3 euro - CATU7JHPSHJW',
+    
+    'CAT - FS - CATU55PFLY3H',
+    'CAT - FS - CATB5M8T2VVP',
+    'CAT - FS - CAT462S6JTNW',
+    'CAT - FS - CAT56JBK0RFT',
+    'CAT - FS - CATM6ZUXHP7M',
+    'CAT - FS - CATW7GEAYMZP',
+    'CAT - FS - CATS7WXOFKR9',
+    'CAT - FS - CATU8DH1WIJX',
+    
+    'KOMETA - 3 euro - KM7301VUBE',
+    'KOMETA - 3 euro - KMW3607W3M',
+    'KOMETA - 3 euro - KM81P0N1VV',
+    'KOMETA - 3 euro - KMZ1UYZ3NE',
+    'KOMETA - 3 euro - KMQ20XB5FD',
+    'KOMETA - 3 euro - KM126VN77Y',
+    'KOMETA - 3 euro - KM22CTZ8ZB',
+    
+    'KOMETA - FS - KMBLF92SL3',
+    'KOMETA - FS - KMHN2SFADL',
+    'KOMETA - FS - KM6OQBRS5Y',
+    'KOMETA - FS - KMEQDV49XI',
+    'KOMETA - FS - KMLS1EGRPD',
+    'KOMETA - FS - KMLTOXT9H7',
+    'KOMETA - FS - KMXVCH5R9F'
+]; // Промокоды
         let claimedPromoCodes = []; // Активированные промокоды
         let claimedAccessCodes = []; // Активированные коды доступа
 
@@ -774,29 +969,42 @@
             // Данные о казино
             const casinos = {
                 'Топовые казино': [
-                    { name: '🍸 CASINO VODKA', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                    { name: '🍸VODKA', description: '💸 ПРОМОКОД - NOXI 💸', image: 'vodka.jpg', link: 'https://vodka2.xyz/?id=6989' },
+                    { name: 'Vavada', description: '💸 ПРОМОКОД - NOXI 💸', image: 'vavada.jpg', link: 'https://partnervavadarv.com/?promo=b3878ae5-679f-4c72-9336-885220e081fb&target=register' },
+                    { name: 'Bitz', description: '💸 ПРОМОКОД - NOXI 💸', image: 'bitz1.jpg', link: 'https://bitzplay.fun/dfa4785a7' },
+                    { name: 'BetBe7', description: '💸 ПРОМОКОД - NOXI 💸', image: 'betb7.jpg', link: 'https://betbe7.com?code=6256840' } 
                 ],
                 'RTP+++': [
-                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                    { name: 'HYPE', description: '💸 ПРОМОКОД - NOXI 💸', image: 'hype.jpg', link: 'https://hypewin.online/d77daa2fe' },
+                    { name: 'CryptoBoss', description: '💸 ПРОМОКОД - NOXI 💸', image: 'crypto.jpg', link: 'https://cryptobossc.online/d2742707e' },
+                    { name: 'AUF', description: '💸 ПРОМОКОД - NOXI 💸', image: 'auf.jpg', link: 'https://auflink.com/ddd2435e8' },
+                    { name: 'Unlim', description: '💸 ПРОМОКОД - NOXI 💸', image: 'unlim.jpg', link: 'https://unlimc.net/d289edd3b' }
                 ],
                 'ROYAL': [
-                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                    { name: 'Lex', description: '💸 ПРОМОКОД - NOXI 💸', image: 'lex.jpg', link: 'https://lex-irrs01.com/c0420e974' },
+                    { name: 'GIZBO', description: '💸 ПРОМОКОД - NOXI 💸', image: 'gizbo.jpg', link: 'https://gizbo-way-six.com/c7ed6f629' },
+                    { name: '1GO', description: '💸 ПРОМОКОД - NOXI 💸', image: '1go.jpg', link: 'https://1go-irrs01.com/c0575e11f' },
+                    { name: 'Starda', description: '💸 ПРОМОКОД - NOXI 💸', image: 'starda.jpg', link: 'https://strd-irrs12.com/cf33230dd' },
+                    { name: 'Drip', description: '💸 ПРОМОКОД - NOXI 💸', image: 'drip.jpg', link: 'https://drp-irrs12.com/ca2649b03' },
+                    { name: 'Monro', description: '💸 ПРОМОКОД - NOXI 💸', image: 'monro.jpg', link: 'https://mnr-blrs10.com/c238510e5' }
                 ],
                 'CAT': [
-                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                    { name: 'KOMETA', description: '💸 ПРОМОКОД - NOXI 💸', image: 'kometa.jpg', link: 'https://stars-flight.com/s3e4c4340' },
+                    { name: 'R7', description: '💸 ПРОМОКОД - NOXI 💸', image: 'r7.jpg', link: 'https://aristocratic-hall.com/d40ef8022' },
+                    { name: 'KENT', description: '💸 ПРОМОКОД - NOXI 💸', image: 'kent.jpg', link: 'https://passage-through-deserts.com/d52c88348' },
+                    { name: 'DADDY', description: '💸 ПРОМОКОД - NOXI 💸', image: 'daddy.jpg', link: 'ttps://nice-road-five.com/dd7acdd4a' },
+                    { name: 'GAMMA', description: '💸 ПРОМОКОД - NOXI 💸', image: 'gamma.jpg', link: 'https://preesiader.com/d8377e5d2' },
+                    { name: 'CAT', description: '💸 ПРОМОКОД - NOXI 💸', image: 'cat.jpg', link: 'https://catchthecatthree.com/d30d59f29' }
                 ],
 
                 'РЕКОМЕНДАЦИИ': [
-                    { name: 'Водка', description: 'Здесь бля чо писать', image: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album', link: 'https://sun9-38.userapi.com/impg/PMcJABldYsplaGzCZCRlTnuG9nJFoVZkklgn5Q/35D3pBid7Co.jpg?size=1280x720&quality=96&sign=6ce51711b9b386f43159060cd55124bd&type=album' },
-                    { name: 'Мостбет', description: 'Популярное онлайн-казино.', image: 'mostbet.jpg', link: 'https://example.com/mostbet-bonus' }
+                    { name: 'Coins', description: '💸 ПРОМОКОД - NOXI 💸', image: 'coins.jpg', link: 'https://coinsgame5.com/c/837400_28952048' },
+                    { name: 'Stake', description: '💸 ПРОМОКОД - NOXI 💸', image: 'stake.jpg', link: 'https://stake1021.com/?c=QwbPdvWI' },
+                    { name: 'Champion', description: '💸 ПРОМОКОД - NOXI 💸', image: 'champion.jpg', link: 'https://temon-gter.cfd/go/kbB?p82102p306222p6c68' }
                 ],
                 'ПРОЧЕЕ': [
-                    { name: 'Даргон', description: 'Бездепозитный бонус от Даргон.', image: 'dargon.jpg', link: 'https://example.com/dargon-bonus' },
-                    { name: 'Битз', description: 'Бездепозитный бонус от Битз.', image: 'bitz.jpg', link: 'https://example.com/bitz-bonus' }
+                    { name: 'Vovan', description: '💸 ПРОМОКОД - NOXI 💸', image: 'vovan.jpg', link: 'https://vovan.site/d12f51218' },
+                    { name: 'BitStarz', description: '💸 ПРОМОКОД - NOXI 💸', image: 'bitstarz.jpg', link: 'https://bs3.direct/be0b1cdad' }
                 ]
             };
 
@@ -918,7 +1126,7 @@
             setTimeout(() => {
                 document.querySelector('.loading').style.display = 'none'; // Скрытие анимации
                 document.getElementById('bootom-menu').style.display = 'block'; // Открытие основного меню
-            }, 7000);
+            }, 3500);
 
             // Открытие модального окна при нажатии на кнопку "Проекты"
             document.getElementById('projectsButton').addEventListener('click', () => {
