@@ -37,7 +37,7 @@
 
         async function fetchUserData(telegramId) {
             try {
-                const response = await fetch('http://localhost:3000/api/user', { // Изменено на localhost
+                const response = await fetch('http://localhost:3000/api/user', { // Отправляем на локальный сервер
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -67,7 +67,7 @@
             if (user) {
                 avatarImg.src = user.avatar_url;
                 nameH2.textContent = user.first_name + ' ' + user.last_name;
-                usernameP.textContent = '@' + user.username;
+                usernameP.textContent = '@' + user.username; // Используем username
                 balanceSpan.textContent = user.balance;
 
                 profileContainer.style.display = 'block';
